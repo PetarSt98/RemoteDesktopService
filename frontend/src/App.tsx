@@ -9,9 +9,8 @@ import CreateUser from './Components/CreateUser';
 const initOptions = {
   url: 'https://auth.cern.ch/auth',
   realm: 'cern',
-  clientId: 'rds-frontend',
-  redirectUri: 'http://localhost:3000/',
-  clientSecret: 'FhYM5h0REVw474hGQto7v9Zud4JVLbfo',
+  clientId: 'sso-example',
+  redirectUri: 'http://localhost:3000',
 };
 
 let keycloak = Keycloak(initOptions);
@@ -32,30 +31,34 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="container py-5" style={{ background: '#f5f8fa' }}>
-      <div className="py-3 mb-2" style={{ background: 'black', color: 'white' }}>
-        <div style={{ float: 'right' }}>
-          {!auth && (
-            <button onClick={login} className="btn btn-primary mr-2">Login</button>
-          )}
-          {auth && (
-            <>
-              <span className="mr-2">Hello, {username}</span>
-              <button onClick={() => keycloak.logout()} className="btn btn-secondary">Logout</button>
-            </>
-          )}
+    <>
+      <div className="py-3 mb-2 fixed-top w-100" style={{ background: 'black', color: 'white' }}>
+        <div className="container">
+          <div style={{ float: 'right' }}>
+            {!auth && (
+              <button onClick={login} className="btn btn-primary mr-2" style={{ background: 'black', color: 'white', border: 'none', height: '100%' }}>Login</button>
+            )}
+            {auth && (
+              <>
+                <span className="mr-2">Hello, {username}</span>
+                <button onClick={() => keycloak.logout()} className="btn btn-secondary" style={{ background: 'black', color: 'white', border: 'none', height: '100%' }}>Logout</button>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <h1 className="text-center mb-5 text-primary">User Device Management</h1>
-      <div className="row">
-        <div className="col-md-6">
-          <UserSearch />
-        </div>
-        <div className="col-md-6">
-          <CreateUser />
+      <div className="container py-5 mt-5" style={{ background: '#f5f8fa' }}>
+        <h1 className="text-center mb-5 text-primary">User Device Management</h1>
+        <div className="row">
+          <div className="col-md-6">
+            <UserSearch />
+          </div>
+          <div className="col-md-6">
+            <CreateUser />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
