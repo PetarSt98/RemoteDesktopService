@@ -10,7 +10,7 @@ const initOptions = {
   url: 'https://auth.cern.ch/auth',
   realm: 'cern',
   clientId: 'sso-example',
-  redirectUri: 'http://localhost:3000',
+  redirectUri: 'https://rds-front-rds-frontend.app.cern.ch/',
 };
 
 let keycloak = Keycloak(initOptions);
