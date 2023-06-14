@@ -15,15 +15,25 @@ const initOptions = {
 
 let keycloak = Keycloak(initOptions);
 
+interface UserSearchProps {
+  token: string;
+}
+
+interface CreateUserProps {
+  token: string;
+}
+
 const App: React.FC = () => {
   const [auth, setAuth] = useState(false);
   const [username, setUsername] = useState('');
+  const [token, setToken] = useState('');
 
   const login = () => {
     keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
       if (authenticated) {
         setAuth(true);
         setUsername(keycloak.tokenParsed?.preferred_username || '');
+        setToken(keycloak.token || '');  // Set the token
       } else {
         setAuth(false);
       }
@@ -51,10 +61,10 @@ const App: React.FC = () => {
         <h1 className="text-center mb-5 text-primary">User Device Management</h1>
         <div className="row">
           <div className="col-md-6">
-            <UserSearch />
+            <UserSearch token={token} />  {/* Pass the token as a prop */}
           </div>
           <div className="col-md-6">
-            <CreateUser />
+            <CreateUser token={token} />  {/* Pass the token as a prop */}
           </div>
         </div>
       </div>

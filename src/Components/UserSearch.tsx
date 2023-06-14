@@ -2,12 +2,20 @@
 import React, { useState } from 'react';
 import DeviceList from './DeviceList';
 
-const UserSearch: React.FC = () => {
+interface UserSearchProps {
+  token: string;
+}
+
+const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
-//
+
   const handleSearch = () => {
-    fetch(`https://localhost:7164/api/UserSearcher/Search?userName=${userName}`)
+    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(response => response.json())
       .then(data => {
         setDevices(data);

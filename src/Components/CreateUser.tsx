@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 
-const CreateUser: React.FC = () => {
+interface CreateUserProps {
+  token: string;
+}
+
+const CreateUser: React.FC<CreateUserProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [deviceName, setDeviceName] = useState(''); 
   const [message, setMessage] = useState(''); // State variable for the response message
   const [messageType, setMessageType] = useState(''); // State variable for the message type
 
   const handleCreate = async () => {
-    console.log(`Creating user: ${userName} with device: ${deviceName}`);
-  
     try {
-      const response = await fetch('https://localhost:7164/api/User/Add', {
+      const response = await fetch('https://rds-back-new-rds-frontend.app.cern.ch/api/User/Add', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ userName, deviceName }), 
         credentials: 'include',
@@ -22,17 +25,14 @@ const CreateUser: React.FC = () => {
       const text = await response.text();
   
       if (text === 'Successful user update') {
-        console.log('User created successfully');
         setMessageType('success');
       } else {
-        console.error('Failed to create user');
         setMessageType('danger');
       }
   
       setMessage(text);
   
     } catch (error) {
-      console.error('An error occurred:', error);
       setMessageType('danger');
       setMessage('An error occurred while creating the user');
     } finally {
@@ -40,7 +40,6 @@ const CreateUser: React.FC = () => {
       setDeviceName('');
     }
   };
-  
 
   return (
     <div className="card p-3">
@@ -65,8 +64,8 @@ const CreateUser: React.FC = () => {
           type="text" 
           value={deviceName} 
           onChange={e => setDeviceName(e.target.value)} 
-          className="form-control mt-2"
-          placeholder="Enter device name..."
+          className="form-control"
+          placeholder="Device name..."
         />
         <div className="input-group-append">
           <button onClick={handleCreate} className="btn btn-outline-primary">Create</button>
