@@ -31,6 +31,7 @@ const App: React.FC = () => {
   const login = () => {
     keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
       if (authenticated) {
+        console.log(keycloak.token);  // Log the token to the console
         setAuth(true);
         setUsername(keycloak.tokenParsed?.preferred_username || '');
         setToken(keycloak.token || '');  // Set the token
