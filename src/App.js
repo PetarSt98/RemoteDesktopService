@@ -69,7 +69,7 @@ import PropTypes from "prop-types";
     }, [userToken, kcInstance.token]);
   
     return (
-      <>
+      <div className="App" style={{ margin: "20px" }}>
         {authenticated === false && <p>Loading...</p>}
         {authenticated && (
           <>
@@ -107,7 +107,7 @@ import PropTypes from "prop-types";
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
 }
 App.propTypes = {
