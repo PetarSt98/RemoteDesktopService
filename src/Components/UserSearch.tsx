@@ -10,7 +10,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
   const [exchangeToken, setExchangeToken] = useState("");
-  
+  console.log('exchangeToken:', exchangeToken);
   // Get the exchange token
   useTokenExchangeHandler(token, setExchangeToken);
 

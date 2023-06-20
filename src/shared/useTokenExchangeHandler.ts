@@ -5,14 +5,17 @@ export const useTokenExchangeHandler = (
   token: string,
   callback: (accToken: string) => void
 ) => {
+  console.log('exchangeToken:', token);
   useEffect(() => {
-    const getToken = () => {
+    const getToken = async () => {
       if (token !== undefined && token.length > 0) {
-        const accessToken = getExchangeToken(token);
+        const accessToken = await getExchangeToken(token);
         return accessToken;
       }
-      return Promise.resolve("");
+      return "";
     };
+
     getToken().then((data) => callback(data));
   }, [token, callback]);
 };
+
