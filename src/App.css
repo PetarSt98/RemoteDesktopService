@@ -1,0 +1,27 @@
+.top-ribbon {
+    width: 100%;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+  
+  .logout-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .user-info {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .user-info .user-name,
+  .user-info .user-username {
+    margin: 0;
+  }
+  
