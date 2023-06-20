@@ -1,20 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DeviceList from './DeviceList';
-import { useTokenExchangeHandler } from '../shared/useTokenExchangeHandler'; // Update this import path as per your directory structure.
 
 interface UserSearchProps {
   token: string;
 }
 
+const getAccessToken = async () => {
+  const AUTH_SERVER = 'auth.cern.ch';
+  const AUTH_REALM = 'cern';
+
+  const response = await fetch(`https://${AUTH_SERVER}/auth/realms/${AUTH_REALM}/api-access/token`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: 'rds-back', // Replace with your client_id
+          client_secret: 'QMItHzMlFWUSJL4HmdGhbsEj6GhA4H1T', // Replace with your client_secret
+          audience: 'rds-front' // Replace with your audience
+      })
+  });
+
+  if (response.ok) {
+      const data = await response.json();
+      return data.access_token;
+  } else {
+      throw new Error(`Failed to fetch access token: ${response.statusText}`);
+  }
+};
+
 const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
   const [exchangeToken, setExchangeToken] = useState("");
-  console.log('exchangeToken:', exchangeToken);
-  // Get the exchange token
-  useTokenExchangeHandler(token, setExchangeToken);
+
+  useEffect(() => {
+    getAccessToken()
+        .then((token) => {
+            console.log("Access token: ", token);
+            setExchangeToken(token);
+        })
+        .catch(console.error);
+  }, []); 
 
   const handleSearch = () => {
+    console.log('token', getAccessToken())
     fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
       headers: {
         'Authorization': `Bearer ${exchangeToken}`
