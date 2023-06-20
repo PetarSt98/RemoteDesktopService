@@ -1,6 +1,6 @@
-// components/UserSearch.tsx
 import React, { useState } from 'react';
 import DeviceList from './DeviceList';
+import { useTokenExchangeHandler } from '../shared/useTokenExchangeHandler'; // Update this import path as per your directory structure.
 
 interface UserSearchProps {
   token: string;
@@ -9,11 +9,15 @@ interface UserSearchProps {
 const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
+  const [exchangeToken, setExchangeToken] = useState("");
+  
+  // Get the exchange token
+  useTokenExchangeHandler(token, setExchangeToken);
 
   const handleSearch = () => {
     fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${exchangeToken}`
       }
     })
       .then(response => response.json())
