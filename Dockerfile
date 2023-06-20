@@ -8,7 +8,7 @@ COPY package*.json yarn.lock ./
 RUN yarn install
 # RUN npm install --legacy-peer-deps
 COPY . .
-RUN npm run build
+RUN yarn build
 
 # Stage 2: Set up a production-ready Nginx server to serve the application
 FROM registry.cern.ch/docker.io/library/nginx:1.23.4 AS prod-nginx
