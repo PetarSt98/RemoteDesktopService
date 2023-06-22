@@ -1,5 +1,5 @@
 export const getResourceMembersUrl = (resource: string) => {
-  return getApiPath() + `UserSearcher/Search?userName=${resource}`;
+  return getApiPath() + `query/login-by-machine/${resource}`;
 };
 
 export const getUserResourcesUrl = () => {
@@ -18,8 +18,7 @@ export const getAddMemberUrl = () => {
   return getApiPath() + "gateway/resource";
 };
 
-const getApiPath = () =>
-  "https://rds-back-new-rds-frontend.app.cern.ch/" + "/api/";
+const getApiPath = () => process.env.REACT_APP_REST_API_URL + "/api/";
 
 export const getPostRequestConfig = (body: any, token: any) => {
   return {
@@ -55,8 +54,8 @@ export const getExchangeToken = (subjectToken: string) => {
     grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
     requested_token_type: "urn:ietf:params:oauth:token-type:refresh_token",
     subject_token: subjectToken,
-    client_id: "rds-front" as string,
-    audience: "https://rds-back-new-rds-frontend.app.cern.ch/" as string
+    client_id: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
+    audience: process.env.REACT_APP_BACKEND_CLIENT_ID as string
   });
   return fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
