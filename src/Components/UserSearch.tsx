@@ -25,7 +25,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
       })
       .catch(error => console.error(error));
   };
-
+  console.log('Tokencina',`Bearer ${exchangeToken}`)
   return (
     <div className="card p-3">
       <h2 className="mb-3">Search User</h2>
