@@ -10,13 +10,16 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
   const [exchangeToken, setExchangeToken] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useTokenExchangeHandler(token, setExchangeToken);
 
   const handleSearch = () => {
+    setIsLoading(true);
     fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${exchangeToken}`
+        Authorization: "Bearer " +  exchangeToken
       }
     })
       .then(response => response.json())
