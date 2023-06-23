@@ -54,8 +54,9 @@ export const getExchangeToken = (subjectToken: string) => {
     grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
     requested_token_type: "urn:ietf:params:oauth:token-type:refresh_token",
     subject_token: subjectToken,
-    client_id: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
-    audience: process.env.REACT_APP_BACKEND_CLIENT_ID as string
+    subject_issuer: '',
+    client_id: "rds-front",
+    audience: "rds-back"
   });
   return fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
