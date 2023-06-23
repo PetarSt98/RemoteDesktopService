@@ -19,7 +19,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
     fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
       method: "GET",
       headers: {
-        Authorization: "Bearer " +  exchangeToken
+        Authorization: "Bearer " +  token
       }
     })
       .then(response => response.json())
