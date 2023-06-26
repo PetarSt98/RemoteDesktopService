@@ -13,20 +13,30 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useTokenExchangeHandler(token, setExchangeToken);
-
+// Ovde nesto ne valja sa komunikacijom
   const handleSearch = () => {
     setIsLoading(true);
-    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/Search?userName=${userName}`, {
+    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/search?userName=${userName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        setDevices(data);
-      })
-      .catch(error => console.error(error));
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // Check if data is an array before setting state
+        if (Array.isArray(data)) {
+            setDevices(data);
+        } else {
+            console.error("Expected an array but got:", typeof data);
+            setDevices([]);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        setDevices([]);
+    });
   };
   console.log('Tokencina',`Bearer ${exchangeToken}`)
   return (

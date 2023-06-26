@@ -50,14 +50,21 @@ export const getGetRequestConfig = (accessToken: string) => {
 };
 
 export const getExchangeToken = (subjectToken: string) => {
+  if (!subjectToken) {
+    console.error('subjectToken is null or undefined');
+    return;
+  }
+
+  console.log('lmao: ', subjectToken)
   const body = new URLSearchParams({
     grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
     requested_token_type: "urn:ietf:params:oauth:token-type:refresh_token",
     subject_token: subjectToken,
-    subject_issuer: '',
+    subject_issuer: "https://auth.cern.ch/auth/realms/cern",
     client_id: "rds-front",
     audience: "rds-back"
   });
+  return body;
   return fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
     {

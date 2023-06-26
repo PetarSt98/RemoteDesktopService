@@ -11,7 +11,8 @@ export const useTokenExchangeHandler = (
       console.log('accessTokenUlazi:', Object.keys(token).length !== 0);
       if (token !== undefined && Object.keys(token).length !== 0) {
         console.log('accessToken:', 'Proso');
-        const accessToken = await getExchangeToken(token);
+        const tokencina = token;
+        const accessToken = await getExchangeToken(tokencina);
         console.log('accessToken:', accessToken);
         return accessToken;
       }
