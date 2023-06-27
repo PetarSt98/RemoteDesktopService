@@ -55,7 +55,6 @@ export const getExchangeToken = (subjectToken: string) => {
     return;
   }
 
-  console.log('lmao: ', subjectToken)
   const body = new URLSearchParams({
     grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
     requested_token_type: "urn:ietf:params:oauth:token-type:refresh_token",
@@ -64,8 +63,7 @@ export const getExchangeToken = (subjectToken: string) => {
     client_id: "rds-front",
     audience: "rds-back"
   });
-  return body;
-  return fetch(
+  const tokencina = fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
     {
       method: "POST",
@@ -76,10 +74,18 @@ export const getExchangeToken = (subjectToken: string) => {
     }
   )
     .then((data) => {
-      if (data.ok) return data.json();
+      if (!data.ok) {
+        throw new Error(`Network response was not ok. Status: ${data.status}`);
+      }
+      return data.json();
     })
     .then((data) => {
       return data.access_token;
     })
-    .catch((err) => {});
+    .catch((err) => {
+      console.error('Error occurred while fetching exchange token:', err);
+      throw err;
+    });
+  return tokencina;
 };
+

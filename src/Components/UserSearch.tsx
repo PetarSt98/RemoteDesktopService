@@ -11,12 +11,11 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [devices, setDevices] = useState<string[]>([]);
   const [exchangeToken, setExchangeToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   useTokenExchangeHandler(token, setExchangeToken);
 // Ovde nesto ne valja sa komunikacijom
   const handleSearch = () => {
     setIsLoading(true);
-    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/search?userName=${userName}`, {
+    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/UserSearcher/all?userName=${userName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
@@ -24,7 +23,6 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         // Check if data is an array before setting state
         if (Array.isArray(data)) {
             setDevices(data);
@@ -38,7 +36,6 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
         setDevices([]);
     });
   };
-  console.log('Tokencina',`Bearer ${exchangeToken}`)
   return (
     <div className="card p-3">
       <h2 className="mb-3">Search User</h2>

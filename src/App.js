@@ -15,7 +15,7 @@ const App = ({ authenticated, userToken, kcInstance }) => {
   return (
     <div className="App">
       <AuthRibbon authenticated={authenticated} userToken={userToken} kcInstance={kcInstance} />
-      <UserManagement token={userToken} />
+      <UserManagement token={kcInstance.token} />
     </div>
   );
 }

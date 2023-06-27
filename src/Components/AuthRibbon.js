@@ -21,7 +21,6 @@ const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
     };
     getData();
   }, [userToken, kcInstance.token]);
-
   return (
     <div className="top-ribbon">
       <div className="user-info">

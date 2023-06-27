@@ -21,7 +21,7 @@ const UserManagement = ({ token }) => {
 }
 
 UserManagement.propTypes = {
-  token: PropTypes.object,
+  token: PropTypes.string,
 };
 
 export default UserManagement;

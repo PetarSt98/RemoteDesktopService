@@ -5,16 +5,17 @@ export const useTokenExchangeHandler = (
   token: string,
   callback: (accToken: string) => void
 ) => {
-  console.log('exchangeToken:', token);
   useEffect(() => {
     const getToken = async () => {
-      console.log('accessTokenUlazi:', Object.keys(token).length !== 0);
       if (token !== undefined && Object.keys(token).length !== 0) {
-        console.log('accessToken:', 'Proso');
         const tokencina = token;
-        const accessToken = await getExchangeToken(tokencina);
-        console.log('accessToken:', accessToken);
-        return accessToken;
+        try {
+          const accessToken = await getExchangeToken(tokencina);
+          console.log('accessToken:', accessToken);
+          return accessToken;
+        } catch (err) {
+          console.error('Error occurred while getting exchange token:', err);
+        }
       }
       console.log('accessToken:', 'Fail');
       return "";
@@ -23,4 +24,3 @@ export const useTokenExchangeHandler = (
     getToken().then((data) => callback(data));
   }, [token, callback]);
 };
-
