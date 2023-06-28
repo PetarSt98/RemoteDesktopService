@@ -13,7 +13,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   useTokenExchangeHandler(token, setExchangeToken);
 // Ovde nesto ne valja sa komunikacijom
   const handleSearch = () => {
-    fetch(`https://localhost:44354/api1/UserSearcher/all?userName=${userName}`, {
+    fetch(`https://localhost:44354/api/DeviceSearcher/search?deviceName=${userName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
@@ -36,14 +36,14 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   };
   return (
     <div className="card p-3">
-      <h2 className="mb-3">Search User</h2>
+      <h2 className="mb-3">Search for the device</h2>
       <div className="input-group">
         <input 
           type="text" 
           value={userName} 
           onChange={e => setUserName(e.target.value)} 
           className="form-control"
-          placeholder="Search user..."
+          placeholder="Search device..."
         />
         <div className="input-group-append">
           <button onClick={handleSearch} className="btn btn-outline-primary">Search</button>

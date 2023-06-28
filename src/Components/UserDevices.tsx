@@ -12,31 +12,35 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   useTokenExchangeHandler(token, setExchangeToken);
 
   useEffect(() => {
-    fetch(`https://localhost:44354/api1/GetDevices/all?userName=${userName}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " +  exchangeToken
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Check if data is an array before setting state
-        if (Array.isArray(data)) {
-            setDevices(data);
-        } else {
-            console.error("Expected an array but got:", typeof data);
-            setDevices([]);
+    // Check if exchangeToken is null before sending the request
+
+    if (exchangeToken.length > 0) {
+      fetch(`https://localhost:44354/api/UserDevices/search?userName=${userName}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + exchangeToken
         }
-    })
-    .catch(error => {
-        console.error(error);
-        setDevices([]);
-    });
+      })
+      .then(response => response.json())
+      .then(data => {
+          // Check if data is an array before setting state
+          if (Array.isArray(data)) {
+              setDevices(data);
+          } else {
+              console.error("Expected an array but got:", typeof data);
+              setDevices([]);
+          }
+      })
+      .catch(error => {
+          console.error(error);
+          setDevices([]);
+      });
+    }
   }, [userName, exchangeToken]); // Fetch devices whenever userName or exchangeToken changes
 
   return (
     <div className="card p-3">
-      <h2 className="mb-3">User Devices</h2>
+      <h2 className="mb-3">User's devices</h2>
       {devices.length === 0 ? (
         <p>No devices found for the user.</p>
       ) : (

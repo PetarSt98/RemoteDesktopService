@@ -11,7 +11,7 @@ export const useTokenExchangeHandler = (
         const tokencina = token;
         try {
           const accessToken = await getExchangeToken(tokencina);
-          console.log('accessToken:', accessToken);
+          console.log('accessToken:', 'Successful');
           return accessToken;
         } catch (err) {
           console.error('Error occurred while getting exchange token:', err);

@@ -8,7 +8,7 @@ type DeviceListProps = {
 const DeviceList: React.FC<DeviceListProps> = ({ devices }) => {
   return (
     <div className="card p-3">
-      <h2 className="mb-3">User Devices</h2>
+      <h2 className="mb-3">Users of the device</h2>
       {devices.map((device, index) => (
         <p key={index}>{device}</p>
       ))}
