@@ -9,10 +9,12 @@ interface UserSearchProps {
 const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
   const [userName, setUserName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
+  const [searchClicked, setSearchClicked] = useState(false); // New state variable
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
-// Ovde nesto ne valja sa komunikacijom
+
   const handleSearch = () => {
+    setSearchClicked(true);
     fetch(`https://localhost:44354/api/DeviceSearcher/search?deviceName=${userName}`, {
       method: "GET",
       headers: {
@@ -35,7 +37,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
     });
   };
   return (
-    <div className="card p-3">
+    <div className="card p-3 h-100">
       <h2 className="mb-3">Search for the device</h2>
       <div className="input-group">
         <input 
@@ -49,9 +51,10 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
           <button onClick={handleSearch} className="btn btn-outline-primary">Search</button>
         </div>
       </div>
-      <DeviceList devices={devices} />
+      {searchClicked && <DeviceList devices={devices} />}
     </div>
   );
 }
+
 
 export default UserSearch;

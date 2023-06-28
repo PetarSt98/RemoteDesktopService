@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CreateUser from './CreateUser'; // Import the CreateUser component
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 
 interface UserDevicesProps {
@@ -8,12 +9,12 @@ interface UserDevicesProps {
 
 const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [devices, setDevices] = useState<string[]>([]);
+  const [showCreateUser, setShowCreateUser] = useState(false); // New state to track whether to show the CreateUser form
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
 
   useEffect(() => {
     // Check if exchangeToken is null before sending the request
-
     if (exchangeToken.length > 0) {
       fetch(`https://localhost:44354/api/UserDevices/search?userName=${userName}`, {
         method: "GET",
@@ -39,8 +40,20 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   }, [userName, exchangeToken]); // Fetch devices whenever userName or exchangeToken changes
 
   return (
-    <div className="card p-3">
-      <h2 className="mb-3">User's devices</h2>
+    <div className="card p-3 h-100"> {/* Added h-100 for full height */}
+      <div className="d-flex justify-content-between align-items-center mb-3"> {/* Used Bootstrap classes */}
+        <h2>User's devices</h2>
+        <button 
+          onClick={() => setShowCreateUser(!showCreateUser)}
+          className="btn btn-outline-primary"
+        >
+          ➕ Add new device
+        </button>
+      </div>
+      {/* Conditionally render the CreateUser form */}
+      {showCreateUser && (
+        <CreateUser token={token} userName={userName} />
+      )}
       {devices.length === 0 ? (
         <p>No devices found for the user.</p>
       ) : (
