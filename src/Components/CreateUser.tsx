@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 
 interface CreateUserProps {
   token: string;
@@ -9,28 +10,33 @@ const CreateUser: React.FC<CreateUserProps> = ({ token }) => {
   const [deviceName, setDeviceName] = useState(''); 
   const [message, setMessage] = useState(''); // State variable for the response message
   const [messageType, setMessageType] = useState(''); // State variable for the message type
-
+  const [exchangeToken, setExchangeToken] = useState("");
+  useTokenExchangeHandler(token, setExchangeToken);
+  console.log('lala', userName, deviceName)
   const handleCreate = async () => {
+    console.log(`Creating user: ${userName} with device: ${deviceName}`);
     try {
-      const response = await fetch('https://rds-back-new-rds-frontend.app.cern.ch/api/User/Add', {
+      const response = await fetch('https://localhost:44354/api/User/Add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: "Bearer " +  exchangeToken
         },
         body: JSON.stringify({ userName, deviceName }), 
-        credentials: 'include',
       });
   
-      const text = await response.text();
+      const data = await response.text();
   
-      if (text === 'Successful user update') {
+      if (data === 'Successful user update') {
+        console.log('User created successfully');
         setMessageType('success');
       } else {
+        console.error('Failed to create user');
         setMessageType('danger');
       }
+
   
-      setMessage(text);
+      setMessage(data);
   
     } catch (error) {
       setMessageType('danger');
@@ -40,7 +46,6 @@ const CreateUser: React.FC<CreateUserProps> = ({ token }) => {
       setDeviceName('');
     }
   };
-
   return (
     <div className="card p-3">
       <h2 className="mb-3">Create User</h2>

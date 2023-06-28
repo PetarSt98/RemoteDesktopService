@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import DeviceList from './DeviceList';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 
-interface UserSearchProps {
+interface UserDevicesProps {
   token: string;
+  userName: string;
 }
 
-const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
-  const [userName, setUserName] = useState('');
+const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [devices, setDevices] = useState<string[]>([]);
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
-// Ovde nesto ne valja sa komunikacijom
-  const handleSearch = () => {
-    fetch(`https://localhost:44354/api1/UserSearcher/all?userName=${userName}`, {
+
+  useEffect(() => {
+    fetch(`https://localhost:44354/api1/GetDevices/all?userName=${userName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
@@ -33,25 +32,22 @@ const UserSearch: React.FC<UserSearchProps> = ({ token }) => {
         console.error(error);
         setDevices([]);
     });
-  };
+  }, [userName, exchangeToken]); // Fetch devices whenever userName or exchangeToken changes
+
   return (
     <div className="card p-3">
-      <h2 className="mb-3">Search User</h2>
-      <div className="input-group">
-        <input 
-          type="text" 
-          value={userName} 
-          onChange={e => setUserName(e.target.value)} 
-          className="form-control"
-          placeholder="Search user..."
-        />
-        <div className="input-group-append">
-          <button onClick={handleSearch} className="btn btn-outline-primary">Search</button>
-        </div>
-      </div>
-      <DeviceList devices={devices} />
+      <h2 className="mb-3">User Devices</h2>
+      {devices.length === 0 ? (
+        <p>No devices found for the user.</p>
+      ) : (
+        <ul>
+          {devices.map((device, index) => (
+            <li key={index}>{device}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
 
-export default UserSearch;
+export default UserDevices;
