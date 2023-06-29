@@ -10,11 +10,15 @@ import {
 } from "./selectors";
 import AuthRibbon from './Components/AuthRibbon';
 import UserManagement from './Components/UserManagement';
+import './design/bg.jpg'; // import the image
 
 const App = ({ authenticated, userToken, kcInstance }) => {
   return (
     <div className="App">
       <AuthRibbon authenticated={authenticated} userToken={userToken} kcInstance={kcInstance} />
+      <div className="headerImage"> {/* A div for the background image */}
+        <h1 className="headerTitle">CERN Remote Desktop Service</h1> {/* The title text */}
+      </div>
       <UserManagement token={kcInstance.token} userName={userToken.preferred_username} />
     </div>
   );

@@ -25,7 +25,7 @@ const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
     <div className="top-ribbon">
       <div className="user-info">
         <p className="user-name">{userInfo.name}</p>
-        <p className="user-username">{userInfo.preferred_username}</p>
+        {/* <p className="user-username">{userInfo.preferred_username}</p> */}
       </div>
       {authenticated && (
         <button className="logout-button" onClick={() => logout()}>Logout</button>

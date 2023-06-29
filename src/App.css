@@ -1,27 +1,49 @@
 .top-ribbon {
-    width: 100%;
-    background-color: black;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-  }
-  
-  .logout-button {
-    background-color: rgb(68, 66, 66);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .user-info {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .user-info .user-name,
-  .user-info .user-username {
-    margin: 0;
-  }
-  
+  width: 100%;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.logout-button {
+  background-color: rgb(68, 66, 66);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  gap: 10px;
+}
+
+.user-info .user-name,
+.user-info .user-username {
+  margin: 0;
+}
+
+/* The div containing the image */
+.headerImage {
+  background-image: url('./design/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px; /* Adjust according to your image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The title text */
+.headerTitle {
+  color: white;
+  font-size: 48px; /* Adjust size as needed */
+}
+
+.title {
+  font-size: 26px;  /* Set the font size */
+  color: gray;  /* Set the color */
+}

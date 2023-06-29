@@ -48,7 +48,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
 
   return (
     <div className="card p-3">
-      <h2 className="mb-3">Add user to the device</h2>
+      <h2 className="mb-3">Input a new device name</h2>
 
       {/* Display the response message in an alert */}
       {message && (
@@ -66,7 +66,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           placeholder="Device name..."
         />
         <div className="input-group-append">
-          <button onClick={handleCreate} className="btn btn-outline-primary">Create</button>
+          <button onClick={handleCreate} className="btn btn-outline-primary">Add</button>
         </div>
       </div>
     </div>
