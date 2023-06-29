@@ -47,3 +47,15 @@
   font-size: 26px;  /* Set the font size */
   color: gray;  /* Set the color */
 }
+
+.device-item {
+  position: relative;
+  padding: 5px;
+}
+
+.device-item .flex-grow-1 {
+  border-top: 1px solid #ccc;
+  position: absolute;
+  top: 50%;
+  width: calc(100% - 40px);
+}
