@@ -59,3 +59,7 @@
   top: 50%;
   width: calc(100% - 40px);
 }
+
+.user-email {
+  margin-left: 15px;
+}

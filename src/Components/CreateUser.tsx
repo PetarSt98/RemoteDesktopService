@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
-import { Spinner } from 'react-bootstrap';
+import { Form, Spinner } from 'react-bootstrap';
 
 interface CreateUserProps {
   token: string;
@@ -19,7 +19,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
     setIsLoading(true);
     console.log(`Creating user: ${userName} with device: ${deviceName}`);
     try {
-      const response = await fetch('https://localhost:44354/api/add_pop_up/add', {
+      const response = await fetch('https://rds-back-new-rds-frontend.app.cern.ch/api/add_pop_up/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,6 +33,9 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
       if (data === 'Successfully added the device!') {
         console.log('Successfully added the device!');
         setMessageType('success');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
         console.error('Failed to add device');
         setMessageType('danger');
@@ -49,9 +52,14 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
     }
   };
 
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    handleCreate();
+  };
+
   return (
     <div className="card p-3">
-      <h2 className="mb-3">Input a new device name</h2>
+      <h4 className="mb-3">Enter a new device name</h4>
 
       {/* Display the response message in an alert */}
       {message && (
@@ -60,31 +68,33 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
         </div>
       )}
 
-      <div className="input-group">
-        <input 
-          type="text" 
-          value={deviceName} 
-          onChange={e => setDeviceName(e.target.value)} 
-          className="form-control"
-          placeholder="Device name..."
-          disabled={isLoading} // Input field is disabled while loading
-        />
-        <div className="input-group-append">
-          <button onClick={handleCreate} className="btn btn-outline-primary" disabled={isLoading}>
-            {isLoading ? (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            ) : (
-              "Add"
-            )}
-          </button>
+      <Form onSubmit={handleFormSubmit}>
+        <div className="input-group">
+          <input 
+            type="text" 
+            value={deviceName} 
+            onChange={e => setDeviceName(e.target.value)} 
+            className="form-control"
+            placeholder="Device name..."
+            disabled={isLoading} // Input field is disabled while loading
+          />
+          <div className="input-group-append">
+            <button type="submit" className="btn btn-outline-primary" disabled={isLoading}>
+              {isLoading ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                "Add"
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      </Form>
     </div>
   );
 }

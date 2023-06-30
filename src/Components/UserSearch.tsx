@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import DeviceList from './DeviceList';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
+import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import Swal from 'sweetalert2';
+import { Form } from 'react-bootstrap';
 
 interface UserSearchProps {
   token: string;
@@ -12,12 +14,14 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
   const [deviceName, setDeviceName] = useState('');
   const [devices, setDevices] = useState<string[]>([]);
   const [searchClicked, setSearchClicked] = useState(false);
+  const [searchSuccessful, setSearchSuccessful] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
 
   const handleSearch = () => {
     setSearchClicked(true);
-    fetch(`https://localhost:44354/api/search_tabel/search?userName=${userName}&deviceName=${deviceName}`, {
+    const uppercasedDeviceName = deviceName.toUpperCase();
+    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
@@ -33,12 +37,13 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
         }
       })
       .then(data => {
-        // Check if data is an array before setting state
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setDevices(data);
+          setSearchSuccessful(true);
         } else {
           console.error("Expected an array but got:", typeof data);
           setDevices([]);
+          setSearchSuccessful(false);
         }
       })
       .catch(error => {
@@ -57,6 +62,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
           });
         }
         setDevices([]);
+        setSearchSuccessful(false);
       });
   };
 
@@ -71,7 +77,8 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${userName}&deviceName=${deviceName}`, {
+        const uppercasedDeviceName = deviceName.toUpperCase();
+        fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -82,13 +89,19 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
             let color: 'success' | 'error';
             if (data === "Successful user removal!") {
               color = 'success';
+              Swal.fire({
+                text: data,
+                icon: color
+              }).then(() => {
+                window.location.reload();
+              });
             } else {
               color = 'error';
+              Swal.fire({
+                text: data,
+                icon: color
+              });
             }
-            Swal.fire({
-              text: data,
-              icon: color
-            });
           })
           .catch(error => {
             console.error(error);
@@ -100,32 +113,47 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
       }
     });
   };
-
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    handleSearch();
+  };
   return (
     <div className="card p-3 h-100">
       <h2 className="mb-3">Search for the device</h2>
-      <div className="input-group">
-        <input 
-          type="text" 
-          value={deviceName} 
-          onChange={e => setDeviceName(e.target.value)} 
-          className="form-control"
-          placeholder="Search device..."
-        />
-        <div className="input-group-append">
-          <button onClick={handleSearch} className="btn btn-outline-primary">Search</button>
-          {searchClicked && (
+      <Form onSubmit={handleFormSubmit}>
+        <div className="input-group">
+          <input 
+            type="text" 
+            value={deviceName} 
+            onChange={e => setDeviceName(e.target.value)} 
+            className="form-control"
+            placeholder="Search device..."
+          />
+          <div className="input-group-append">
             <button 
-              onClick={handleDelete} 
-              className="btn btn-outline-danger ml-2"
-              disabled={!searchClicked}
-              title="Remove device from user"
+              type="button" 
+              onClick={handleSearch} 
+              className="btn btn-outline-primary"
+              title="Search device"
             >
-              ➖
+              Search
             </button>
-          )}
+            {searchSuccessful && (
+              <div className="d-flex ml-2">
+                <DownloadRdp computerName={deviceName.toUpperCase()} />
+                <button 
+                  onClick={handleDelete} 
+                  className="btn btn-outline-danger ml-2"
+                  disabled={!searchSuccessful}
+                  title="Remove device from user"
+                >
+                  Remove device
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </Form>
       {searchClicked && <DeviceList devices={devices} />}
     </div>
   );

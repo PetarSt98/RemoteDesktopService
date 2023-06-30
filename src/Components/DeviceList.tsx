@@ -6,14 +6,26 @@ type DeviceListProps = {
 };
 
 const DeviceList: React.FC<DeviceListProps> = ({ devices }) => {
+  if (!devices.length) {
+    return <p>No users found for the device.</p>;
+  }
+  
   return (
-    <div className="card p-3">
-      <h2 className="mb-3">Users of the device</h2>
-      {devices.map((device, index) => (
-        <p key={index}>{device}</p>
-      ))}
-    </div>
+    <table className="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>Users and Owners</th>
+        </tr>
+      </thead>
+      <tbody>
+        {devices.map((device, index) => (
+          <tr key={index}>
+            <td>{device}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
-}
+};
 
 export default DeviceList;

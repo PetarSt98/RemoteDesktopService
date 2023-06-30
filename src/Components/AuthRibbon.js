@@ -24,7 +24,10 @@ const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
   return (
     <div className="top-ribbon">
       <div className="user-info">
-        <p className="user-name">{userInfo.name}</p>
+        <p className="user-name">
+          {userInfo.name}
+          {<span className="user-email">{userInfo.email}</span>} 
+          </p>
         {/* <p className="user-username">{userInfo.preferred_username}</p> */}
       </div>
       {authenticated && (

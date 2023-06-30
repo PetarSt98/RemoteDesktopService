@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import CreateUser from './CreateUser';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import Swal from 'sweetalert2';
+import { DownloadRdp } from './DownloadRdp/DownloadRdp';
+
 
 interface UserDevicesProps {
   token: string;
@@ -34,9 +36,12 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, handleDelete }) => {
     <li className="d-flex justify-content-between align-items-center">
       {device}
       <hr className="flex-grow-1 mx-3" />
-      <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm" title="Remove device from user">
-        ➖
-      </button>
+      <div className="d-flex">
+        <DownloadRdp computerName={device} />
+        <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
+          ➖
+        </button>
+      </div>
     </li>
   );
 };
@@ -49,7 +54,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
 
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://localhost:44354/api/devices_tabel/search?userName=${userName}`, {
+      fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -72,7 +77,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   }, [userName, exchangeToken]);
 
   const deleteDevice = (device: string) => {
-    fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
+    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + exchangeToken
@@ -80,21 +85,22 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
     })
       .then(response => response.text())
       .then(data => {
-        let color;
+        let color: 'success' | 'error';
         if (data === "Successful user removal!") {
-          color = 'success'; // Green
-        } else {
-          color = 'error'; // Red
-        }
-        Swal.fire({
-          text: data,
-          icon: color as 'success' | 'error'
-        }).then(() => {
-          if (data !== "Successful user removal!") {
+          color = 'success';
+          Swal.fire({
+            text: data,
+            icon: color
+          }).then(() => {
             window.location.reload();
-          }
-        });
-        setDevices(devices.filter(d => d !== device));
+          });
+        } else {
+          color = 'error';
+          Swal.fire({
+            text: data,
+            icon: color
+          });
+        }
       })
       .catch(error => {
         console.error(error);
@@ -107,21 +113,55 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
 
   return (
     <div className="card p-3 h-100">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>User's devices</h2>
-        <button onClick={() => setShowCreateUser(!showCreateUser)} className="btn btn-outline-primary">
-          ➕ Add new device
-        </button>
-      </div>
-      {showCreateUser && <CreateUser token={token} userName={userName} />}
+      {showCreateUser && (
+        <div className="mb-3">
+          <div className="d-flex justify-content-between mb-3">
+            <h2>Add a new device</h2>
+            <button 
+              onClick={() => setShowCreateUser(!showCreateUser)} 
+              className="btn btn-outline-primary"
+            >
+              Hidde add new device
+            </button>
+          </div>
+          <CreateUser token={token} userName={userName} />
+        </div>
+      )}
+
+      {!showCreateUser && (
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2>Listed all devices</h2>
+          <button 
+            onClick={() => setShowCreateUser(!showCreateUser)} 
+            className="btn btn-outline-primary"
+            title="Open tab for adding a new device to the user"
+          >
+            ➕ Add new device
+          </button>
+        </div>
+      )}
+
       {devices.length === 0 ? (
         <p>No devices found for the user.</p>
       ) : (
-        <ul>
-          {devices.map((device, index) => (
-            <DeviceItem key={index} device={device} handleDelete={() => deleteDevice(device)} />
-          ))}
-        </ul>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Device</th>
+              {/* <th>Action</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {devices.map((device, index) => (
+              <tr key={index}>
+                {/* <td>{device}</td> */}
+                <td>
+                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
