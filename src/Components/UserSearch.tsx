@@ -12,6 +12,7 @@ interface UserSearchProps {
 
 const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
   const [deviceName, setDeviceName] = useState('');
+  const [searchedDeviceName, setSearchedDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
   const [searchClicked, setSearchClicked] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(false);
@@ -40,6 +41,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
         if (Array.isArray(data) && data.length > 0) {
           setDevices(data);
           setSearchSuccessful(true);
+          setSearchedDeviceName(deviceName);
         } else {
           console.error("Expected an array but got:", typeof data);
           setDevices([]);
@@ -77,7 +79,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        const uppercasedDeviceName = deviceName.toUpperCase();
+        const uppercasedDeviceName = searchedDeviceName.toUpperCase();
         fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
@@ -140,7 +142,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
             </button>
             {searchSuccessful && (
               <div className="d-flex ml-2">
-                <DownloadRdp computerName={deviceName.toUpperCase()} />
+                <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
                 <button 
                   onClick={handleDelete} 
                   className="btn btn-outline-danger ml-2"
