@@ -58,18 +58,9 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
   };
 
   return (
-    <div className="card p-3">
-      <h4 className="mb-3">Enter a new device name</h4>
-
-      {/* Display the response message in an alert */}
-      {message && (
-        <div className={`alert alert-${messageType}`} role="alert">
-          {message}
-        </div>
-      )}
-
+    <>
       <Form onSubmit={handleFormSubmit}>
-        <div className="input-group">
+        <div className="input-group mb-3">
           <input 
             type="text" 
             value={deviceName} 
@@ -95,7 +86,14 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           </div>
         </div>
       </Form>
-    </div>
+
+      {/* Display the response message in an alert */}
+      {message && (
+        <div className={`alert alert-${messageType}`} role="alert">
+          {message}
+        </div>
+      )}
+    </>
   );
 }
 

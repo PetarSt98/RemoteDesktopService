@@ -3,7 +3,7 @@ import DeviceList from './DeviceList';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import Swal from 'sweetalert2';
-import { Form } from 'react-bootstrap';
+import { Form, Collapse, Button } from 'react-bootstrap';
 
 interface UserSearchProps {
   token: string;
@@ -214,37 +214,46 @@ return (
       </div>
     </Form>
     {searchSuccessful && (
-      <div className="mb-3">
+      <div className="mb-3 d-flex justify-content-between">
         <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
-        <button 
+        <Button 
+          variant="outline-danger"
           onClick={handleDelete} 
-          className="btn btn-outline-danger ml-2"
           disabled={!searchSuccessful}
           title="Remove device from user"
         >
           Remove device  
-        </button>
-        <button onClick={handleAddUser} className="btn btn-outline-primary ml-2" title="Add new user">Add new user</button>
+        </Button>
+        <Button 
+          variant={showAddUser ? "outline-secondary" : "outline-primary"}
+          onClick={() => setShowAddUser(!showAddUser)}
+          aria-controls="example-collapse-text"
+          aria-expanded={showAddUser}
+        >
+          {showAddUser ? "Hide Add New User" : "Add New User"}
+        </Button>
       </div>
     )}
-    {showAddUser && (
-      <Form onSubmit={handleNewUserSubmit}>
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            value={newUserName}
-            onChange={e => setNewUserName(e.target.value)}
-            className="form-control"
-            placeholder="New user name..."
-          />
-          <div className="input-group-append">
-            <button type="submit" className="btn btn-outline-primary" title="Add user">Add User</button>
-          </div>
-        </div>
-      </Form>
-    )}
     {searchClicked && <DeviceList devices={devices} />}
+    <Collapse in={showAddUser}>
+      <div id="example-collapse-text">
+        <Form onSubmit={handleNewUserSubmit}>
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              value={newUserName}
+              onChange={e => setNewUserName(e.target.value)}
+              className="form-control"
+              placeholder="New user name..."
+            />
+            <div className="input-group-append">
+              <Button variant="outline-primary" type="submit" title="Add user">Add User</Button>
+            </div>
+          </div>
+        </Form>
+      </div>
+    </Collapse>
   </div>
 );
-}
+};
 export default UserSearch;

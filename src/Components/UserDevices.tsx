@@ -3,7 +3,7 @@ import CreateUser from './CreateUser';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
-
+import { Button } from 'react-bootstrap';
 
 interface UserDevicesProps {
   token: string;
@@ -113,34 +113,26 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
 
   return (
     <div className="card p-3 h-100">
-      {showCreateUser && (
-        <div className="mb-3">
-          <div className="d-flex justify-content-between mb-3">
-            <h2>Add a new device</h2>
-            <button 
-              onClick={() => setShowCreateUser(!showCreateUser)} 
-              className="btn btn-outline-primary"
-            >
-              Hidde add new device
-            </button>
-          </div>
-          <CreateUser token={token} userName={userName} />
-        </div>
-      )}
-
-      {!showCreateUser && (
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2>Listed all devices</h2>
-          <button 
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2>Listed all devices</h2>
+        {showCreateUser ? (
+          <Button 
+            variant="outline-secondary"
             onClick={() => setShowCreateUser(!showCreateUser)} 
-            className="btn btn-outline-primary"
+          >
+            Hide add new device
+          </Button>
+        ) : (
+          <Button 
+            variant="outline-primary"
+            onClick={() => setShowCreateUser(!showCreateUser)} 
             title="Open tab for adding a new device to the user"
           >
             ➕ Add new device
-          </button>
-        </div>
-      )}
-
+          </Button>
+        )}
+      </div>
+  
       {devices.length === 0 ? (
         <p>No devices found for the user.</p>
       ) : (
@@ -160,11 +152,17 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
                 </td>
               </tr>
             ))}
+            {showCreateUser && (
+              <tr>
+                <td colSpan={2}><CreateUser token={token} userName={userName} /></td>
+              </tr>
+            )}
           </tbody>
         </table>
       )}
     </div>
   );
 };
+
 
 export default UserDevices;
