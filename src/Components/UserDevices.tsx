@@ -54,7 +54,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
 
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
+      fetch(`https://localhost:44354/api/devices_tabel/search?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -77,7 +77,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   }, [userName, exchangeToken]);
 
   const deleteDevice = (device: string) => {
-    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
+    fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + exchangeToken

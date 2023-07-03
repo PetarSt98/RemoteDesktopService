@@ -17,12 +17,15 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
   const [searchClicked, setSearchClicked] = useState(false);
   const [searchSuccessful, setSearchSuccessful] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUserName, setNewUserName] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
 
   const handleSearch = () => {
     setSearchClicked(true);
+    setShowAddUser(false);
     const uppercasedDeviceName = deviceName.toUpperCase();
-    fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
+    fetch(`https://localhost:44354/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " +  exchangeToken
@@ -66,6 +69,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
         setDevices([]);
         setSearchSuccessful(false);
       });
+      
   };
 
   const handleDelete = () => {
@@ -80,7 +84,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rds-back-new-rds-frontend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
+        fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -115,50 +119,132 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
       }
     });
   };
-  const handleFormSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    handleSearch();
+  // const handleFormSubmit = (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   handleSearch();
+  // };
+  const handleAddUser = () => {
+    setShowAddUser(true);
   };
-  return (
-    <div className="card p-3 h-100">
-      <h2 className="mb-3">Search for the device</h2>
-      <Form onSubmit={handleFormSubmit}>
-        <div className="input-group">
-          <input 
-            type="text" 
-            value={deviceName} 
-            onChange={e => setDeviceName(e.target.value)} 
+  const handleNewUserSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const response = await fetch('https://localhost:44354/api/add_pop_up/add_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: "Bearer " +  exchangeToken
+      },
+      body: JSON.stringify({ userName: newUserName, deviceName: searchedDeviceName.toUpperCase() }),
+    });
+    const result = await response.text();
+    let color: 'success' | 'error' = response.ok ? 'success' : 'error';
+    Swal.fire({
+      text: result,
+      icon: color
+    });
+    if(response.ok) {
+      setNewUserName('');
+      setShowAddUser(false);
+      // If successful, fetch the updated user list
+      handleSearch();
+    }
+  };
+//   return (
+//     <div className="card p-3 h-100">
+//       <h2 className="mb-3">Search for the device</h2>
+//       <Form onSubmit={handleFormSubmit}>
+//         <div className="input-group">
+//           <input 
+//             type="text" 
+//             value={deviceName} 
+//             onChange={e => setDeviceName(e.target.value)} 
+//             className="form-control"
+//             placeholder="Search device..."
+//           />
+//           <div className="input-group-append">
+//             <button 
+//               type="button" 
+//               onClick={handleSearch} 
+//               className="btn btn-outline-primary"
+//               title="Search device"
+//             >
+//               Search
+//             </button>
+//             {searchSuccessful && (
+//               <div className="d-flex ml-2">
+//                 <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
+//                 <button 
+//                   onClick={handleDelete} 
+//                   className="btn btn-outline-danger ml-2"
+//                   disabled={!searchSuccessful}
+//                   title="Remove device from user"
+//                 >
+//                   Remove device
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </Form>
+//       {searchClicked && <DeviceList devices={devices} />}
+//     </div>
+//   );
+// }
+return (
+  <div className="card p-3 h-100">
+    <h3 className="card-title">Search</h3>
+    <Form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter device name..."
+          value={deviceName}
+          onChange={(e) => setDeviceName(e.target.value)}
+        />
+        <div className="input-group-append">
+          <button 
+            type="submit"
+            className="btn btn-outline-primary"
+            title="Search device"
+          >  
+            Search  
+          </button>
+        </div>
+      </div>
+    </Form>
+    {searchSuccessful && (
+      <div className="mb-3">
+        <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
+        <button 
+          onClick={handleDelete} 
+          className="btn btn-outline-danger ml-2"
+          disabled={!searchSuccessful}
+          title="Remove device from user"
+        >
+          Remove device  
+        </button>
+        <button onClick={handleAddUser} className="btn btn-outline-primary ml-2" title="Add new user">Add new user</button>
+      </div>
+    )}
+    {showAddUser && (
+      <Form onSubmit={handleNewUserSubmit}>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            value={newUserName}
+            onChange={e => setNewUserName(e.target.value)}
             className="form-control"
-            placeholder="Search device..."
+            placeholder="New user name..."
           />
           <div className="input-group-append">
-            <button 
-              type="button" 
-              onClick={handleSearch} 
-              className="btn btn-outline-primary"
-              title="Search device"
-            >
-              Search
-            </button>
-            {searchSuccessful && (
-              <div className="d-flex ml-2">
-                <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
-                <button 
-                  onClick={handleDelete} 
-                  className="btn btn-outline-danger ml-2"
-                  disabled={!searchSuccessful}
-                  title="Remove device from user"
-                >
-                  Remove device
-                </button>
-              </div>
-            )}
+            <button type="submit" className="btn btn-outline-primary" title="Add user">Add User</button>
           </div>
         </div>
       </Form>
-      {searchClicked && <DeviceList devices={devices} />}
-    </div>
-  );
+    )}
+    {searchClicked && <DeviceList devices={devices} />}
+  </div>
+);
 }
-
 export default UserSearch;
