@@ -25,7 +25,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName, deviceName }), 
+        body: JSON.stringify({ userName, deviceName, addDeviceOrUser: 'device' }), 
       });
   
       const data = await response.text();
@@ -44,11 +44,11 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
       setMessage(data);
   
     } catch (error) {
-      setMessageType('danger');
-      setMessage('An error occurred while creating the user');
+        setMessageType('danger');
+        setMessage('An error occurred while creating the device');
     } finally {
-      setIsLoading(false);
-      setDeviceName('');
+        setIsLoading(false);
+        setDeviceName('');
     }
   };
 

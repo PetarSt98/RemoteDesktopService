@@ -14,7 +14,9 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices }) => {
     <table className="table table-striped mt-3">
       <thead>
         <tr>
-          <th>Users with access</th>
+          <th>List of users with access for a device
+
+</th>
         </tr>
       </thead>
       <tbody>

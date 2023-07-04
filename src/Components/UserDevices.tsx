@@ -114,7 +114,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   return (
     <div className="card p-3 h-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Listed all devices</h2>
+        <h4>Listed all devices with your access</h4>
         {showCreateUser ? (
           <Button 
             variant="outline-secondary"
@@ -139,7 +139,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Device</th>
+              <th>Devices</th>
               {/* <th>Action</th> */}
             </tr>
           </thead>
