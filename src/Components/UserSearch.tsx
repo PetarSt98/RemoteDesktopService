@@ -30,52 +30,61 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
   const handleSearch = () => {
     setSearchClicked(true);
     setShowAddUser(false);
-    const uppercasedDeviceName = deviceName.toUpperCase();
-    fetch(`https://localhost:44354/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " +  exchangeToken
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.text().then(text => {
-            throw new Error(text);
-          });
+
+    if (deviceName.length === 0){
+      Swal.fire({
+        title: 'Empty device name!',
+        text: 'Enter a device name',
+        icon: 'warning'
+      });
+    }
+    else{
+      const uppercasedDeviceName = deviceName.toUpperCase();    
+      fetch(`https://localhost:44354/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " +  exchangeToken
         }
       })
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setDevices(data);
-          setSearchSuccessful(true);
-          setSearchedDeviceName(deviceName);
-        } else {
-          console.error("Expected an array but got:", typeof data);
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.text().then(text => {
+              throw new Error(text);
+            });
+          }
+        })
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            setDevices(data);
+            setSearchSuccessful(true);
+            setSearchedDeviceName(deviceName);
+          } else {
+            console.error("Expected an array but got:", typeof data);
+            setDevices([]);
+            setSearchSuccessful(false);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          if (error.message.includes("owner")) {
+            Swal.fire({
+              title: 'Unauthorized device!',
+              text: error.message,
+              icon: 'error'
+            });
+          } else {
+            Swal.fire({
+              title: 'Warning!',
+              text: error.message,
+              icon: 'info'
+            });
+          }
           setDevices([]);
           setSearchSuccessful(false);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.message.includes("owner")) {
-          Swal.fire({
-            title: 'Unauthorized device!',
-            text: error.message,
-            icon: 'error'
-          });
-        } else {
-          Swal.fire({
-            title: 'Warning!',
-            text: error.message,
-            icon: 'info'
-          });
-        }
-        setDevices([]);
-        setSearchSuccessful(false);
-      });
-      
+        });
+    }
   };
 
   const handleDelete = () => {
