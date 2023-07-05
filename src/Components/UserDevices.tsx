@@ -12,10 +12,11 @@ interface UserDevicesProps {
 
 interface DeviceItemProps {
   device: string;
+  status: boolean;
   handleDelete: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, handleDelete }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Confirmation',
@@ -36,7 +37,13 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, handleDelete }) => {
     <li className="d-flex justify-content-between align-items-center">
       {device}
       <hr className="flex-grow-1 mx-3" />
-      <div className="d-flex">
+      <div className="d-flex align-items-center">
+        <span 
+          className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
+          title={status ? 'Device is available' : 'Device is not available'}
+        >
+          {status ? 'Online' : 'Offline'}
+        </span>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
           ➖
@@ -48,6 +55,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, handleDelete }) => {
 
 const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [devices, setDevices] = useState<string[]>([]);
+  const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
@@ -64,6 +72,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         .then(data => {
           if (Array.isArray(data)) {
             setDevices(data);
+            checkDeviceStatuses(data); // Get device status right after setting the devices
           } else {
             console.error("Expected an array but got:", typeof data);
             setDevices([]);
@@ -75,6 +84,29 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         });
     }
   }, [userName, exchangeToken]);
+
+  const checkDeviceStatuses = (deviceNames: string[]) => {
+    fetch(`https://localhost:44354/api/devices_tabel/check`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json', 
+        Authorization: "Bearer " + exchangeToken
+      },
+      body: JSON.stringify({ userName, deviceNames }), // Include userName and deviceNames in request body
+    })
+    .then(response => response.json())
+    .then(statuses => {
+      console.log('Received statuses:', statuses); // Added console.log here
+      const newDeviceStatus: { [key: string]: boolean } = {};
+      for (let i = 0; i < deviceNames.length; i++) {
+        newDeviceStatus[deviceNames[i]] = statuses[i];
+      }
+      setDeviceStatus(newDeviceStatus);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   const deleteDevice = (device: string) => {
     fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
@@ -146,9 +178,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
           <tbody>
             {devices.map((device, index) => (
               <tr key={index}>
-                {/* <td>{device}</td> */}
                 <td>
-                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} />
+                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} status={deviceStatus[device]} />
                 </td>
               </tr>
             ))}

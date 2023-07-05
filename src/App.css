@@ -63,3 +63,17 @@
 .user-email {
   margin-left: 15px;
 }
+
+.device-status.green {
+  background-color: green;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+}
+
+.device-status.red {
+  background-color: red;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+}
