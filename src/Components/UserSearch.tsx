@@ -40,7 +40,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     }
     else{
       const uppercasedDeviceName = deviceName.toUpperCase();    
-      fetch(`https://rdgateway.backend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
+      fetch(`https://rdgateway-backend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " +  exchangeToken
@@ -99,7 +99,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway.backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -143,7 +143,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     // setNewUserLoading(true);
     setIsLoading(true);
     try{
-      const response = await fetch('https://rdgateway.backend.app.cern.ch/api/add_pop_up/add', {
+      const response = await fetch('https://rdgateway-backend.app.cern.ch/api/add_pop_up/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

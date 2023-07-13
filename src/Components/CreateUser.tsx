@@ -19,7 +19,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
     setIsLoading(true);
     console.log(`Creating user: ${userName} with device: ${deviceName}`);
     try {
-      const response = await fetch('https://rdgateway.backend.app.cern.ch/api/add_pop_up/add', {
+      const response = await fetch('https://rdgateway-backend.app.cern.ch/api/add_pop_up/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
