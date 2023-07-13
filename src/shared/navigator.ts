@@ -60,8 +60,8 @@ export const getExchangeToken = (subjectToken: string) => {
     requested_token_type: "urn:ietf:params:oauth:token-type:refresh_token",
     subject_token: subjectToken,
     subject_issuer: "https://auth.cern.ch/auth/realms/cern",
-    client_id: "rds-front",
-    audience: "rds-back"
+    client_id: "frontend-ui",
+    audience: "rds-back-new"
   });
   const tokencina = fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
