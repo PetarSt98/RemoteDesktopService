@@ -59,7 +59,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
-
+  console.log("Token: ", exchangeToken)
   useEffect(() => {
     if (exchangeToken.length > 0) {
       fetch(`https://rdgateway.backend.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
