@@ -58,6 +58,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
+  const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false); // New state for add device visibility
   useTokenExchangeHandler(token, setExchangeToken);
   console.log("Token: ", exchangeToken)
   useEffect(() => {
@@ -142,32 +143,39 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         });
       });
   };
-
+  const handleToggleAddDevice = () => {
+    setShowCreateUser(!showCreateUser);
+    setIsAddDeviceVisible(true);
+  };
   return (
     <div className="card p-3 h-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Listed all devices with your access</h4>
-        {showCreateUser ? (
-          <Button 
-            variant="outline-secondary"
-            onClick={() => setShowCreateUser(!showCreateUser)} 
-          >
-            Hide add new device
-          </Button>
-        ) : (
+        {!showCreateUser ? (
           <Button 
             variant="outline-primary"
-            onClick={() => setShowCreateUser(!showCreateUser)} 
+            onClick={handleToggleAddDevice} 
             title="Open tab for adding a new device to the user"
           >
             ➕ Add new device
           </Button>
+        ) : (
+          <Button 
+            variant="outline-secondary"
+            onClick={handleToggleAddDevice} 
+          >
+            Hide add new device
+          </Button>
         )}
       </div>
   
-      {devices.length === 0 ? (
-        <p>No devices found for the user.</p>
-      ) : (
+      {devices.length === 0 && !showCreateUser && (
+        <div className="alert alert-info" role="alert">
+          No devices found for the user.
+        </div>
+      )}
+  
+      {devices.length > 0 && (
         <table className="table table-striped">
           <thead>
             <tr>
@@ -183,16 +191,19 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
                 </td>
               </tr>
             ))}
-            {showCreateUser && (
-              <tr>
-                <td colSpan={2}><CreateUser token={token} userName={userName} /></td>
-              </tr>
-            )}
           </tbody>
         </table>
       )}
+  
+      {showCreateUser && (
+        <div className="mt-3">
+          <CreateUser token={token} userName={userName} />
+        </div>
+      )}
     </div>
   );
+  
+  
 };
 
 
