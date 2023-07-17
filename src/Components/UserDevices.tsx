@@ -3,7 +3,10 @@ import CreateUser from './CreateUser';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
-import { Button } from 'react-bootstrap';
+import { Button, Collapse  } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 interface UserDevicesProps {
   token: string;
@@ -46,7 +49,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete })
         </span>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
-          ➖
+          <FontAwesomeIcon icon={faTrashAlt} /> 
         </button>
       </div>
     </li>
@@ -58,7 +61,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
-  const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false); // New state for add device visibility
+  const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // New state for add device visibility
   useTokenExchangeHandler(token, setExchangeToken);
   console.log("Token: ", exchangeToken)
   useEffect(() => {
@@ -71,6 +75,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
       })
         .then(response => response.json())
         .then(data => {
+          setIsLoading(false);
           if (Array.isArray(data)) {
             setDevices(data);
             checkDeviceStatuses(data); // Get device status right after setting the devices
@@ -82,6 +87,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         .catch(error => {
           console.error(error);
           setDevices([]);
+          setIsLoading(false);
         });
     }
   }, [userName, exchangeToken]);
@@ -157,19 +163,26 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
             onClick={handleToggleAddDevice} 
             title="Open tab for adding a new device to the user"
           >
-            ➕ Add new device
+            <FontAwesomeIcon icon={faPlus} />  Add new device
           </Button>
         ) : (
           <Button 
             variant="outline-secondary"
-            onClick={handleToggleAddDevice} 
+            onClick={handleToggleAddDevice}
+            title="Hide tab for adding a new device to the user"
           >
             Hide add new device
           </Button>
         )}
       </div>
   
-      {devices.length === 0 && !showCreateUser && (
+      <Collapse in={showCreateUser}>
+        <div className="mt-3">
+          <CreateUser token={token} userName={userName} />
+        </div>
+      </Collapse>
+  
+      {devices.length === 0 && !showCreateUser && !isLoading && (
         <div className="alert alert-info" role="alert">
           No devices found for the user.
         </div>
@@ -194,14 +207,9 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
           </tbody>
         </table>
       )}
-  
-      {showCreateUser && (
-        <div className="mt-3">
-          <CreateUser token={token} userName={userName} />
-        </div>
-      )}
     </div>
   );
+
   
   
 };

@@ -27,7 +27,7 @@ negotiate security layer:i:1
 remoteapplicationmode:i:0
 alternate shell:s:
 shell working directory:s:
-gatewayhostname:s:cerngt.cern.ch
+gatewayhostname:s:cerngt01.cern.ch
 gatewayusagemethod:i:1
 gatewaycredentialssource:i:4
 gatewayprofileusagemethod:i:1

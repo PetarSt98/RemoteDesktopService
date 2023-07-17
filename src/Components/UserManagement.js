@@ -33,9 +33,9 @@ const UserManagement = ({ token, userName }) => {
       <div className="d-flex justify-content-center align-items-center mb-5">
         <h1 className="title" style={{position: 'absolute'}}>Manage the Remote Desktop Connection Access For a Client PC</h1>
         <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-          <OverlayTrigger trigger="click" placement="left" overlay={popover}>
-            <Button variant="secondary">Help</Button>
-          </OverlayTrigger>
+        <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
+          <Button variant="secondary">Help</Button>
+        </OverlayTrigger>
         </div>
       </div>
       <div className="row">

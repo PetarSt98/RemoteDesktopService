@@ -4,6 +4,9 @@ import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import Swal from 'sweetalert2';
 import { Form, Collapse, Button, Spinner, Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 interface UserSearchProps {
   token: string;
@@ -198,65 +201,74 @@ return (
       </div>
     </Form>
     {searchSuccessful && (
-      <div className="mb-3 d-flex justify-content-between">
-        <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
-        <Button 
-          variant="outline-danger"
-          onClick={handleDelete} 
-          disabled={!searchSuccessful}
-          title="Remove device from user"
-        >
-          Remove device  
-        </Button>
-        <Button 
-          variant={showAddUser ? "outline-secondary" : "outline-primary"}
-          onClick={() => setShowAddUser(!showAddUser)}
-          aria-controls="example-collapse-text"
-          aria-expanded={showAddUser}
-        >
-          {showAddUser ? "Hide Add New User" : "Add New User"}
-        </Button>
-      </div>
-    )}
-    {searchClicked && <DeviceList devices={devices} />}
-    <Collapse in={showAddUser}>
-  <div id="example-collapse-text">
-    <Form onSubmit={handleNewUserSubmit}>
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          value={newUserName}
-          onChange={e => setNewUserName(e.target.value)}
-          className="form-control"
-          placeholder="New user name..."
-          disabled={isLoading} // disable the input while loading
-        />
-        <div className="input-group-append">
-          <Button variant="outline-primary" type="submit" title="Add user" disabled={isLoading}>
-            {isLoading ? (  // Add a spinner when loading
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            ) : (
-              "Add User"
-            )}
+      <div className="d-flex align-items-center">
+        <strong>Device: {searchedDeviceName.toUpperCase()}</strong>
+        <hr className="flex-grow-1 mx-3" style={{ border: "1px solid black" }} />
+        <div>
+          <Button
+            variant={showAddUser ? "outline-secondary" : "outline-primary"}
+            onClick={() => setShowAddUser(!showAddUser)}
+            aria-controls="example-collapse-text"
+            aria-expanded={showAddUser}
+            className="btn-sm ml-3"
+            title={showAddUser ? "Hide the tab for adding new user to the device" : "Open the tab for adding new user to the device"}
+          >
+            {showAddUser ? "Hide add new user" : (<><FontAwesomeIcon icon={faPlus} /> Add new user</>)}
+          </Button>
+          <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
+          <Button
+            variant="outline-danger"
+            onClick={handleDelete}
+            className="btn-sm ml-3"
+            title="Remove device from user"
+            disabled={!searchSuccessful}
+          >
+            <FontAwesomeIcon icon={faTrashAlt} />
           </Button>
         </div>
       </div>
-    </Form>
-    {/* Display the response message in an alert */}
-    {message && (
-      <div className={`alert alert-${messageType}`} role="alert">
-        {message}
-      </div>
     )}
-  </div>
-</Collapse>
+    <Collapse in={showAddUser}>
+      <div id="example-collapse-text">
+        <Form onSubmit={handleNewUserSubmit}>
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              value={newUserName}
+              onChange={e => setNewUserName(e.target.value)}
+              className="form-control"
+              placeholder="New user name..."
+              disabled={isLoading} // disable the input while loading
+            />
+            <div className="input-group-append">
+              <Button variant="outline-primary" type="submit" title="Add new user to device" disabled={isLoading}>
+                {isLoading ? (  // Add a spinner when loading
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  "Add"
+                )}
+              </Button>
+            </div>
+          </div>
+        </Form>
+        {/* Display the response message in an alert */}
+        {message && (
+          <div className={`alert alert-${messageType}`} role="alert">
+            {message}
+          </div>
+        )}
+      </div>
+    </Collapse>
+    {searchClicked && <DeviceList devices={devices} />}
   </div>
 );
 };
+
+
 export default UserSearch;

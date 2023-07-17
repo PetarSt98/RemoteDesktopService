@@ -3,6 +3,8 @@ import { customizeRdpFile } from "./rdp-template";
 import "./DownloadRdp.scss";
 import { useRef } from "react";
 import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 
 interface DownloadRdpProps {
@@ -40,7 +42,8 @@ export const DownloadRdp = ({ computerName }: DownloadRdpProps) => {
         onClick={downloadRdp}
         title="Download RDP file"
       >
-        Download RDP file
+        <FontAwesomeIcon icon={faDownload} />
+
       </button>
       {/* eslint-disable */}
       <a style={{ display: "none" }} ref={refContainer} href="/"></a>
