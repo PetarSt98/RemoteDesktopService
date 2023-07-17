@@ -1,0 +1,21 @@
+
+.footer {
+    background: #333;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+  }
+  
+  .contact-link {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .contact-link:hover {
+    text-decoration: underline;
+  }
+  

@@ -10,6 +10,7 @@ import {
 } from "./selectors";
 import AuthRibbon from './Components/AuthRibbon';
 import UserManagement from './Components/UserManagement';
+import Footer from './Components/Footer'; // import the Footer component
 import './design/bg.jpg'; // import the image
 
 const App = ({ authenticated, userToken, kcInstance }) => {
@@ -20,6 +21,7 @@ const App = ({ authenticated, userToken, kcInstance }) => {
         <h1 className="headerTitle">CERN Remote Desktop Service</h1> {/* The title text */}
       </div>
       <UserManagement token={kcInstance.token} userName={userToken.preferred_username} />
+      <Footer /> {/* Place the Footer component here */}
     </div>
   );
 }
