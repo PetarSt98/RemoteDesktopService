@@ -4830,6 +4830,11 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
+fortawesome@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://cern-nexus.web.cern.ch/repository/npm-group/fortawesome/-/fortawesome-0.0.1-security.tgz#1c85341f2fa14e1adb28ccfaecfa7ef63796e6fa"
+  integrity sha512-o/pwn9ZSnveFLYP0d5IejSwz0rpGMDQsBaYVvR8WXSvnxILIwh7IUJK0P90QMF4cnIyouVF2BGrz0LEVSyzimA==
+
 forwarded@0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/forwarded/-/forwarded-0.2.0.tgz"
@@ -9204,10 +9209,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.9.5:
-  version "4.9.5"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+typescript@^5.3.0-dev.20230809:
+  version "5.3.0-dev.20230809"
+  resolved "https://cern-nexus.web.cern.ch/repository/npm-group/typescript/-/typescript-5.3.0-dev.20230809.tgz#09c59d3e855c30ac9ec8f9d41fc62a9231a5b28c"
+  integrity sha512-AhrbSEcL6ar5+jdeqwrmrQrvxCX5iK4Zb/YtlCaft0xEr4HOeKWtixh8FRIqugc83bSHqE7noQ0BhLZa9Biazw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

@@ -19,6 +19,7 @@
     "@types/react-toastify": "^4.1.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
+    "fortawesome": "^0.0.1-security",
     "fs-extra": "^11.1.1",
     "history": "^5.3.0",
     "keycloak-js": "^21.1.1",
@@ -31,7 +32,7 @@
     "sass": "^1.63.6",
     "sweetalert2": "^11.7.12",
     "tty-browserify": "^0.0.1",
-    "typescript": "^4.9.5",
+    "typescript": "^5.3.0-dev.20230809",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },

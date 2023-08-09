@@ -90,7 +90,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
       title: 'Confirmation',
       text: 'Are you sure you want to remove this device from the user?',
@@ -102,7 +102,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -218,7 +218,7 @@ return (
           <DownloadRdp computerName={searchedDeviceName.toUpperCase()} />
           <Button
             variant="outline-danger"
-            onClick={handleDelete}
+            onClick={() => handleDelete(userName)}
             className="btn-sm ml-3"
             title="Remove device from user"
             disabled={!searchSuccessful}
@@ -265,7 +265,7 @@ return (
         )}
       </div>
     </Collapse>
-    {searchClicked && <DeviceList devices={devices} />}
+    {searchClicked && <DeviceList devices={devices} handleDelete={handleDelete} searchedDeviceName={searchedDeviceName} />}
   </div>
 );
 };
