@@ -21,20 +21,32 @@ const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
     };
     getData();
   }, [userToken, kcInstance.token]);
+
   return (
-    <div className="top-ribbon">
-      <div className="user-info">
-        <p className="user-name">
-          {userInfo.name}
-          {<span className="user-email">{userInfo.email}</span>} 
-          </p>
-        {/* <p className="user-username">{userInfo.preferred_username}</p> */}
+    <header id="cern-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="cern-title" style={{ display: 'flex', alignItems: 'center' }}>
+        <h1>
+          <a href="http://cern.ch" title="CERN">
+            <span className="cern-word">CERN</span>
+            <span className="accelerating-science">Accelerating science</span>
+          </a>
+        </h1>
       </div>
-      {authenticated && (
-        <button className="logout-button" onClick={() => logout()}>Logout</button>
-      )}
-    </div>
+      <ul className="cern-signedin" style={{ display: 'flex', alignItems: 'center', margin: 0 }}>
+        <li className="cern-accountlinks" style={{ display: 'flex', alignItems: 'center' }}>
+          <span>Signed in as: 
+            <a className="account" href="http://cern.ch/account" title={`Signed as (${userInfo.preferred_username})`}>{userInfo.preferred_username}</a>
+          </span> 
+          <a className="cern-signout" onClick={logout} title="Sign out of your account">Sign out</a>
+        </li>
+        <li style={{ display: 'flex', alignItems: 'center' }}>
+          <a className="cern-directory" href="http://cern.ch/directory" title="Search CERN resources and browse the directory">Directory</a>
+        </li>
+      </ul>
+    </header>
   );
+  
+
 }
 
 AuthRibbon.propTypes = {

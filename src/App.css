@@ -6,6 +6,79 @@
   justify-content: space-between;
   padding: 10px 20px;
 }
+#cern-toolbar {
+  background-color: rgba(30, 30, 30, 0.95);
+  font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
+  color: #999;
+  font-size: 16px; /* Increase the font size to 16px */
+  line-height: 1;
+  padding: 0 5%;
+  overflow: hidden;
+  height: 50px; /* Increase height to fit larger text */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#cern-toolbar a,
+.cern-title a,
+.cern-signedin a {
+  display: inline-block; /* Allows the hover effect to be applied to the entire area */
+  text-decoration: none;
+  padding: 5px; /* Adds space around the link for the hover effect */
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.cern-title a:hover,
+.cern-signedin a:hover,
+.cern-signout:hover,
+.cern-directory:hover,
+.account:hover {
+  background-color: rgba(0, 0, 0, 0.7); /* Darker shading on hover */
+  cursor: pointer; /* Hand cursor on hover */
+  text-decoration: none; /* Removes underline */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.cern-title h1 {
+  font-size: 16px; /* Increase to match toolbar font size */
+}
+
+.cern-title .cern-word {
+  color: white !important; /* Ensuring color is applied */
+  margin-right: 10px;
+}
+
+.accelerating-science {
+  color: lightgray;
+  font-size: 16px; /* Increase to match toolbar font size */
+}
+
+.cern-accountlinks {
+  font-size: 16px; /* Increase to match toolbar font size */
+}
+
+.cern-accountlinks .account {
+  color: lightgray; /* Make the username light gray */
+  margin-right: 10px; /* Add more space between username and Sign out */
+}
+
+.cern-accountlinks .cern-signout {
+  color: lightgray; /* Make "Sign out" text light gray */
+}
+
+.cern-directory {
+  font-size: 16px; /* Increase to match toolbar font size */
+  color: lightgray; 
+}
+
+.cern-signedin {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 
 .logout-button {
   background-color: rgb(68, 66, 66);
