@@ -1,11 +1,3 @@
-.top-ribbon {
-  width: 100%;
-  background-color: black;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-}
 #cern-toolbar {
   background-color: rgba(30, 30, 30, 0.95);
   font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;

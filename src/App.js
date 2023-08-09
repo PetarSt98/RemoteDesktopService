@@ -20,7 +20,9 @@ const App = ({ authenticated, userToken, kcInstance }) => {
       <div className="headerImage"> {/* A div for the background image */}
         <h1 className="headerTitle">CERN Remote Desktop Service</h1> {/* The title text */}
       </div>
-      <UserManagement token={kcInstance.token} userName={userToken.preferred_username} />
+      {userToken.preferred_username && (
+        <UserManagement token={kcInstance.token} userName={userToken.preferred_username} />
+      )}
       <Footer /> {/* Place the Footer component here */}
     </div>
   );

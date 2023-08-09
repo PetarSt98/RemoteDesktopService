@@ -18,7 +18,7 @@ const UserManagement = ({ token, userName }) => {
         <br/><br/>
         You must install SafeSign from CMF on your remote machine in order to use smart login.
         <br/><br/>
-        To be able to modify the membership of the allowed users and connection options, the account CERN\pstojkov must be a CERN primary account and it has to fulfill at least one of the following requirements:
+        To be able to modify the membership of the allowed users and connection options, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
         Is registered as 'Responsible' or 'Main User' of the target computer. To check or modify this information, visit the network database available at 
         <a href="http://cern.ch/register" style={{color: 'blue'}}>http://cern.ch/register</a>.
