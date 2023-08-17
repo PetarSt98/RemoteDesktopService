@@ -14,16 +14,15 @@ const UserManagement = ({ token, userName }) => {
         This utility changes the memberships of allowed users and connection options to specific pc from internet.
         <br/><br/>
         If you need to configure your access from the CERN Network please read on this help page: 
-        <a href="your-link-here" style={{color: 'blue'}}>Configuring remote connection via Remote Desktop Gateway</a>
+        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue'}}> Configuring remote connection via Remote Desktop Gateway</a>
         <br/><br/>
         You must install SafeSign from CMF on your remote machine in order to use smart login.
         <br/><br/>
         To be able to modify the membership of the allowed users and connection options, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
         Is registered as 'Responsible' or 'Main User' of the target computer. To check or modify this information, visit the network database available at 
-        <a href="http://cern.ch/register" style={{color: 'blue'}}>http://cern.ch/register</a>.
+        <a href="https://landb.cern.ch/portal" style={{color: 'blue'}}> https://landb.cern.ch/portal</a>.
         <br/><br/>
-        Is a member of the "NICE Local Administrators Managers" security group in the domain (applies only to HelpDesk and Administrators).
       </Popover.Body>
     </Popover>
   );

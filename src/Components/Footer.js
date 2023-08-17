@@ -7,7 +7,7 @@ const Footer = () => {
       <p>
         Copyright © 2023 CERN |
         <a 
-          href="mailto:petar.stojkovic@cern.ch?subject=Remote Desktop Service Support&cc=pablo.martin.zamora@cern.ch" 
+          href="https://cern.service-now.com/service-portal?id=service_element&name=windows-terminal" 
           className="contact-link"
         >
           Contact for Support
