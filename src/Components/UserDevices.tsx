@@ -43,9 +43,10 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete })
       <div className="d-flex align-items-center">
         <span 
           className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
-          title={status ? 'Device is available' : 'Device is not available'}
+          title={status ? 'This device is online and ready for remote connection' : 'This device is offline and cannot be connected to remotely'}
+          style={{ cursor: 'default' }} 
         >
-          {status ? 'Device is available' : 'Device is not available'}
+          {status ? 'Ready for Connection' : 'Not Ready for Connection'}
         </span>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
