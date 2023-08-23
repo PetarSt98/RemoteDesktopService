@@ -179,7 +179,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
 
 return (
   <div className="card p-3 h-100">
-    <h4 className="card-title">Search for the specific device</h4>
+    <h4 className="card-title">Manage user access for a configured device</h4>
     <Form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
       <div className="input-group mb-3">
         <input
@@ -193,9 +193,9 @@ return (
           <button 
             type="submit"
             className="btn btn-outline-primary"
-            title="Search device"
+            title="Search for a device for which you want to manage the users"
           >  
-            Search  
+            Manage users  
           </button>
         </div>
       </div>

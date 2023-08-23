@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import { Button, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
 interface UserDevicesProps {
@@ -43,10 +43,10 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete })
       <div className="d-flex align-items-center">
         <span 
           className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
-          title={status ? 'This device is online and ready for remote connection' : 'This device is offline and cannot be connected to remotely'}
+          title={status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access'}
           style={{ cursor: 'default' }} 
         >
-          {status ? 'Ready for Connection' : 'Not Ready for Connection'}
+          {status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
         </span>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
@@ -157,7 +157,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   return (
     <div className="card p-3 h-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Listed all devices with your access</h4>
+        <h4>Your remote-enabled devices</h4>
         {!showCreateUser ? (
           <Button 
             variant="outline-primary"

@@ -39,10 +39,10 @@ const UserManagement = ({ token, userName }) => {
       </div>
       <div className="row">
         <div className="col-md-6">
-          <UserSearch token={token} userName={userName} />  
+          <UserDevices token={token} userName={userName} />  
         </div>
         <div className="col-md-6">
-          <UserDevices token={token} userName={userName} /> 
+          <UserSearch token={token} userName={userName} /> 
         </div>
       </div>
     </div>
