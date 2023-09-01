@@ -36,18 +36,20 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete })
     });
   };
 
-  return (
+return (
     <li className="d-flex justify-content-between align-items-center">
-      {device}
-      <hr className="flex-grow-1 mx-3" />
-      <div className="d-flex align-items-center">
+      <span className="d-flex align-items-center"> {/* New container */}
+        {device}
         <span 
           className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
           title={status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access'}
-          style={{ cursor: 'default' }} 
+          style={{ cursor: 'default', marginLeft: '10px' }} 
         >
           {status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
         </span>
+      </span>
+      <hr className="flex-grow-1 mx-3" />
+      <div className="d-flex align-items-center">
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
           <FontAwesomeIcon icon={faTrashAlt} /> 
