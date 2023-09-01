@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from "prop-types";
-import UserSearch from './UserSearch';
+import UserSearch, { UserSearchRef } from './UserSearch';
 import CreateUser from './CreateUser';
 import UserDevices from './UserDevices';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import '../App.css';
 
 const UserManagement = ({ token, userName }) => {
+  const [selectedDevice, setSelectedDevice] = useState("");
   const popover = (
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
       <Popover.Header as="h3">Help</Popover.Header>
@@ -26,6 +27,11 @@ const UserManagement = ({ token, userName }) => {
       </Popover.Body>
     </Popover>
   );
+  const userSearchRef = useRef(null);
+
+  const handleDeviceEdit = (deviceName) => {
+    setSelectedDevice(deviceName);
+  }
   
   return (
     <div className="container py-5 mt-5" style={{ background: '#f5f8fa' }}>
@@ -39,10 +45,12 @@ const UserManagement = ({ token, userName }) => {
       </div>
       <div className="row">
         <div className="col-md-6">
-          <UserDevices token={token} userName={userName} />  
+          <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
         </div>
         <div className="col-md-6">
-          <UserSearch token={token} userName={userName} /> 
+        <UserSearch token={token} userName={userName} deviceNameForEdit={selectedDevice} />
+
+
         </div>
       </div>
     </div>

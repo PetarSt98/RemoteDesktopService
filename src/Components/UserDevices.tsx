@@ -5,21 +5,23 @@ import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import { Button, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faPlus, faCheck, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 
 interface UserDevicesProps {
   token: string;
   userName: string;
+  onEditDevice?: (deviceName: string) => void;
 }
 
 interface DeviceItemProps {
   device: string;
   status: boolean;
   handleDelete: () => void;
+  handleEdit: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Confirmation',
@@ -36,30 +38,49 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete })
     });
   };
 
-return (
+  const confirmEditUser = () => {
+    Swal.fire({
+      title: 'Confirmation',
+      text: 'Are you sure you want to remove this device from the user?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleEdit();
+      }
+    });
+  };
+
+  return (
     <li className="d-flex justify-content-between align-items-center">
-      <span className="d-flex align-items-center"> {/* New container */}
-        {device}
+      <span className="d-flex align-items-center"> {/* Existing container */}
         <span 
           className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
           title={status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access'}
-          style={{ cursor: 'default', marginLeft: '10px' }} 
+          style={{ cursor: 'default', marginRight: '10px' }}  // Changed marginLeft to marginRight
         >
           {status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
         </span>
+        {device}
       </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
+        <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser}>
+          <FontAwesomeIcon icon={faEdit} /> Edit
+        </Button>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
           <FontAwesomeIcon icon={faTrashAlt} /> 
         </button>
       </div>
     </li>
-  );
+);
 };
 
-const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
+const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice  }) => {
   const [devices, setDevices] = useState<string[]>([]);
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
@@ -94,6 +115,11 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
         });
     }
   }, [userName, exchangeToken]);
+  console.log(onEditDevice);
+  const editUser = (device: string) => {
+    console.log(onEditDevice);
+    onEditDevice && onEditDevice(device);
+  };
 
   const checkDeviceStatuses = (deviceNames: string[]) => {
     fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/check`, {
@@ -203,7 +229,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
             {devices.map((device, index) => (
               <tr key={index}>
                 <td>
-                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} status={deviceStatus[device]} />
+                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} handleEdit={() => editUser(device)} status={deviceStatus[device]} />
                 </td>
               </tr>
             ))}
@@ -217,5 +243,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName }) => {
   
 };
 
-
+UserDevices.defaultProps = {
+  onEditDevice: () => { console.warn("onEditDevice not provided!"); }
+};
 export default UserDevices;

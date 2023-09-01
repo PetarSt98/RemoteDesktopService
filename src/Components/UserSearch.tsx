@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef   } from 'react';
 import DeviceList from './DeviceList';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
@@ -7,13 +7,17 @@ import { Form, Collapse, Button, Spinner, Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
+export interface UserSearchRef {
+  handleSearch: () => void;
+}
 
 interface UserSearchProps {
   token: string;
   userName: string;
+  deviceNameForEdit: string;
 }
-
-const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
+const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
+  const { token, userName, deviceNameForEdit } = props;
   const [deviceName, setDeviceName] = useState('');
   const [searchedDeviceName, setSearchedDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
@@ -29,65 +33,76 @@ const UserSearch: React.FC<UserSearchProps> = ({ token, userName }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false)
   useTokenExchangeHandler(token, setExchangeToken);
+  useEffect(() => {
+    if (deviceNameForEdit) {
+      setDeviceName(deviceNameForEdit);
+      handleSearch(deviceNameForEdit);
+    }
+  }, [deviceNameForEdit]);
 
-  const handleSearch = () => {
+  useImperativeHandle(ref, () => ({
+    handleSearch
+  }));
+
+  const handleSearch = (deviceNameForHandle?: string) => {
     setSearchClicked(true);
     setShowAddUser(false);
-
-    if (deviceName.length === 0){
-      Swal.fire({
-        title: 'Empty device name!',
-        text: 'Enter a device name',
-        icon: 'warning'
-      });
-    }
-    else{
-      const uppercasedDeviceName = deviceName.toUpperCase();    
-      fetch(`https://rdgateway-backend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " +  exchangeToken
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.text().then(text => {
-              throw new Error(text);
-            });
-          }
-        })
-        .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            setDevices(data);
-            setSearchSuccessful(true);
-            setSearchedDeviceName(deviceName);
-          } else {
-            console.error("Expected an array but got:", typeof data);
-            setDevices([]);
-            setSearchSuccessful(false);
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          if (error.message.includes("owner")) {
-            Swal.fire({
-              title: 'Unauthorized device!',
-              text: error.message,
-              icon: 'error'
-            });
-          } else {
-            Swal.fire({
-              title: 'Warning!',
-              text: error.message,
-              icon: 'info'
-            });
-          }
-          setDevices([]);
-          setSearchSuccessful(false);
+    const deviceNameToUse = deviceNameForHandle || deviceName;
+    if (deviceNameToUse.length === 0) {
+        Swal.fire({
+            title: 'Empty device name!',
+            text: 'Enter a device name',
+            icon: 'warning'
         });
-    }
+    } 
+    else 
+    {
+        const uppercasedDeviceName = deviceNameToUse.toUpperCase();
+        fetch(`https://rdgateway-backend.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + exchangeToken
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    setDevices(data);
+                    setSearchSuccessful(true);
+                    setSearchedDeviceName(deviceNameToUse);
+                } else {
+                    console.error("Expected an array but got:", typeof data);
+                    setDevices([]);
+                    setSearchSuccessful(false);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                if (error.message.includes("owner")) {
+                    Swal.fire({
+                        title: 'Unauthorized device!',
+                        text: error.message,
+                        icon: 'error'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: error.message,
+                        icon: 'info'
+                    });
+                }
+                setDevices([]);
+                setSearchSuccessful(false);
+            });
+      }
   };
 
   const handleDelete = (UserNameToDelete: string) => {
@@ -268,7 +283,7 @@ return (
     {searchClicked && <DeviceList devices={devices} handleDelete={handleDelete} searchedDeviceName={searchedDeviceName} />}
   </div>
 );
-};
+});
 
 
 export default UserSearch;
