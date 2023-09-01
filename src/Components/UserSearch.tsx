@@ -15,6 +15,7 @@ interface UserSearchProps {
   token: string;
   userName: string;
   deviceNameForEdit: string;
+  onEditComplete: () => void;
 }
 const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   const { token, userName, deviceNameForEdit } = props;
@@ -32,6 +33,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false)
+  const [isEditComplete, setIsEditComplete] = useState(false);
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (deviceNameForEdit) {
@@ -43,7 +45,10 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleSearch
   }));
-
+  const onEditComplete = () => {
+    setIsEditComplete(true);
+    // Any other logic that you wish to include when editing is complete.
+  };
   const handleSearch = (deviceNameForHandle?: string) => {
     setSearchClicked(true);
     setShowAddUser(false);
@@ -78,6 +83,8 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
                     setDevices(data);
                     setSearchSuccessful(true);
                     setSearchedDeviceName(deviceNameToUse);
+                    // onEditComplete();
+                    props.onEditComplete();
                 } else {
                     console.error("Expected an array but got:", typeof data);
                     setDevices([]);

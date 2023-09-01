@@ -48,7 +48,8 @@ const UserManagement = ({ token, userName }) => {
           <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
         </div>
         <div className="col-md-6">
-        <UserSearch token={token} userName={userName} deviceNameForEdit={selectedDevice} />
+        <UserSearch token={token} userName={userName} deviceNameForEdit={selectedDevice} onEditComplete={() => setSelectedDevice("")} />
+
 
 
         </div>

@@ -39,19 +39,20 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, h
   };
 
   const confirmEditUser = () => {
-    Swal.fire({
-      title: 'Confirmation',
-      text: 'Are you sure you want to remove this device from the user?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleEdit();
-      }
-    });
+    // Swal.fire({
+    //   title: 'Confirmation',
+    //   text: 'Are you sure you want to remove this device from the user?',
+    //   icon: 'question',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Yes',
+    //   cancelButtonText: 'No',
+    //   reverseButtons: true
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     handleEdit();
+    //   }
+    // });
+    handleEdit();
   };
 
   return (
