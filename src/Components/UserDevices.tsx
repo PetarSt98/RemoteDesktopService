@@ -69,8 +69,8 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, h
       </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
-        <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser}>
-          <FontAwesomeIcon icon={faEdit} /> Edit
+        <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device">
+          <FontAwesomeIcon icon={faEdit} /> 
         </Button>
         <DownloadRdp computerName={device} />
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
