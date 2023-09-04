@@ -112,6 +112,13 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
       }
   };
 
+  const handleClearSearch = () => {
+    setDeviceName(''); // clear the input
+    setDevices([]); // clear the search results
+    setSearchSuccessful(false); // indicate that there's no successful search
+    setSearchClicked(false); // reset the search click state
+  };
+
   const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
       title: 'Confirmation',
@@ -211,7 +218,20 @@ return (
           value={deviceName}
           onChange={(e) => setDeviceName(e.target.value)}
         />
-        <div className="input-group-append">
+    <div className="input-group-append">
+        {deviceName && 
+          <button 
+            type="button"  // Ensure this button does not submit the form
+            className="btn btn-outline-secondary"
+            onClick={(e) => {
+                e.preventDefault();  
+                handleClearSearch();
+            }}
+            title="Clear Search"
+          >  
+            X
+          </button>
+        }
           <button 
             type="submit"
             className="btn btn-outline-primary"
