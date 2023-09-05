@@ -63,6 +63,7 @@ export const getExchangeToken = (subjectToken: string) => {
     client_id: "frontend-ui-test",
     audience: "backend-test"
   });
+  
   const tokencina = fetch(
     "https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/token",
     {
