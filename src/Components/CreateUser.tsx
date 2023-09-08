@@ -25,7 +25,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName, deviceName, signedInUser, addDeviceOrUser: 'device' }), 
+        body: JSON.stringify({ userName, deviceName, SignedInUser: signedInUser, addDeviceOrUser: 'device' }), 
       });
 
       const data = await response.text();
