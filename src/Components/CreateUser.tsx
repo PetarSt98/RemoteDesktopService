@@ -14,7 +14,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
   const [isLoading, setIsLoading] = useState(false); // New state for loading status
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
-
+  var signedInUser = userName
   const handleCreate = async () => {
     setIsLoading(true);
     console.log(`Creating user: ${userName} with device: ${deviceName}`);
@@ -25,7 +25,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName: userName, deviceName: deviceName, signedInUser: userName, addDeviceOrUser: 'device' }), 
+        body: JSON.stringify({ userName, deviceName, signedInUser, addDeviceOrUser: 'device' }), 
       });
 
       const data = await response.text();
