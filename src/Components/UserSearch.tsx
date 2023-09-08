@@ -17,6 +17,7 @@ interface UserSearchProps {
   deviceNameForEdit: string;
   onEditComplete: () => void;
 }
+
 const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   const { token, userName, deviceNameForEdit } = props;
   const [deviceName, setDeviceName] = useState('');
@@ -181,7 +182,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName: newUserName, deviceName: searchedDeviceName, AddDeviceOrUser: 'user' }),  // use "deviceName" instead of "searchedDeviceName" in the request body
+        body: JSON.stringify({ userName: newUserName, deviceName: searchedDeviceName, signedInUser: userName,  AddDeviceOrUser: 'user' }),  // use "deviceName" instead of "searchedDeviceName" in the request body
       });
       const data = await response.text();
       if (data === 'Successfully added the user!') {

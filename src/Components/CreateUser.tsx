@@ -25,9 +25,9 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName, deviceName, addDeviceOrUser: 'device' }), 
+        body: JSON.stringify({ userName: userName, deviceName: deviceName, signedInUser: userName, addDeviceOrUser: 'device' }), 
       });
-  
+
       const data = await response.text();
   
       if (data === 'Successfully added the device!') {
