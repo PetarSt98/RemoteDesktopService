@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { connect } from "react-redux";
@@ -14,14 +14,15 @@ import Footer from './Components/Footer'; // import the Footer component
 import './design/bg.jpg'; // import the image
 
 const App = ({ authenticated, userToken, kcInstance }) => {
+  const [accountType, setAccountType] = useState(null);
   return (
     <div className="App">
-      <AuthRibbon authenticated={authenticated} userToken={userToken} kcInstance={kcInstance} />
+      <AuthRibbon authenticated={authenticated} userToken={userToken} kcInstance={kcInstance} onAccountTypeChange={(type) => setAccountType(type)} />
       <div className="headerImage"> {/* A div for the background image */}
         <h1 className="headerTitle">CERN Remote Desktop Service</h1> {/* The title text */}
       </div>
       {userToken.preferred_username && (
-        <UserManagement token={kcInstance.token} userName={userToken.preferred_username} />
+        <UserManagement token={kcInstance.token} userName={userToken.preferred_username} primaryAccount={accountType} />
       )}
       <Footer /> {/* Place the Footer component here */}
     </div>

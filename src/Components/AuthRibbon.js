@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 import '../App.css';
 
-const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
+const AuthRibbon = ({ authenticated, userToken, kcInstance, onAccountTypeChange  }) => {
   const logout = () => {
     kcInstance.logout();
   };
@@ -17,7 +17,9 @@ const AuthRibbon = ({ authenticated, userToken, kcInstance }) => {
           headers: { Authorization: `Bearer ${kcInstance.token}` },
         }
       );
-      setUserInfo(await userInfoResponse.json());
+      const fetchedUserInfo = await userInfoResponse.json();
+      setUserInfo(fetchedUserInfo);
+      onAccountTypeChange(fetchedUserInfo.account_type);
     };
     getData();
   }, [userToken, kcInstance.token]);

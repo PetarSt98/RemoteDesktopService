@@ -14,12 +14,13 @@ export interface UserSearchRef {
 interface UserSearchProps {
   token: string;
   userName: string;
+  primaryAccount: string;
   deviceNameForEdit: string;
   onEditComplete: () => void;
 }
 
 const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
-  const { token, userName, deviceNameForEdit } = props;
+  const { token, userName, primaryAccount, deviceNameForEdit } = props;
   const [deviceName, setDeviceName] = useState('');
   const [searchedDeviceName, setSearchedDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
@@ -171,7 +172,16 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   //   event.preventDefault();
   //   handleSearch();
   // };
-  var signedInUser = userName
+  var signedInUser = "";
+  if (primaryAccount === "Primary")
+  {
+    signedInUser = "Primary";
+  }
+  else
+  {
+    signedInUser = userName;
+  }
+
 
   const handleNewUserSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

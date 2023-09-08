@@ -6,7 +6,7 @@ import UserDevices from './UserDevices';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import '../App.css';
 
-const UserManagement = ({ token, userName }) => {
+const UserManagement = ({ token, userName, primaryAccount }) => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const popover = (
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
@@ -48,7 +48,7 @@ const UserManagement = ({ token, userName }) => {
           <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
         </div>
         <div className="col-md-6">
-        <UserSearch token={token} userName={userName} deviceNameForEdit={selectedDevice} onEditComplete={() => setSelectedDevice("")} />
+        <UserSearch token={token} userName={userName} primaryAccount={primaryAccount} deviceNameForEdit={selectedDevice} onEditComplete={() => setSelectedDevice("")} />
 
 
 
