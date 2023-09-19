@@ -94,7 +94,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   console.log("Token: ", exchangeToken)
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
+      fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -127,7 +127,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     setDownloadDeviceName(e.target.value);
   };
   const checkDeviceStatuses = (deviceNames: string[]) => {
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/check`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/check`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', 
@@ -150,7 +150,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const deleteDevice = (device: string) => {
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + exchangeToken
