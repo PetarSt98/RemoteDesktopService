@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import UserSearch, { UserSearchRef } from './UserSearch';
 import CreateUser from './CreateUser';
 import UserDevices from './UserDevices';
-import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
 import '../App.css';
 
 const UserManagement = ({ token, userName, primaryAccount }) => {

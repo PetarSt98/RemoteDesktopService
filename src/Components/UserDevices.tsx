@@ -3,10 +3,10 @@ import CreateUser from './CreateUser';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
-import { Button, Collapse  } from 'react-bootstrap';
+import { Button, Modal, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faPlus, faCheck, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
-
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 interface UserDevicesProps {
   token: string;
@@ -82,6 +82,8 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, h
 };
 
 const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice  }) => {
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [downloadDeviceName, setDownloadDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
@@ -121,7 +123,9 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     console.log(onEditDevice);
     onEditDevice && onEditDevice(device);
   };
-
+  const handleDownloadDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDownloadDeviceName(e.target.value);
+  };
   const checkDeviceStatuses = (deviceNames: string[]) => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/check`, {
       method: "POST",
@@ -187,23 +191,37 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     <div className="card p-3 h-100">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Your remote-enabled devices</h4>
-        {!showCreateUser ? (
-          <Button 
+      </div>
+  
+      <div className="d-flex justify-content-between align-items-center">
+        <div>
+          {!showCreateUser ? (
+            <Button
+              variant="outline-primary"
+              onClick={handleToggleAddDevice}
+              title="Open tab for adding a new device to the user"
+            >
+              <FontAwesomeIcon icon={faPlus} /> Add new device
+            </Button>
+          ) : (
+            <Button
+              variant="outline-secondary"
+              onClick={handleToggleAddDevice}
+              title="Hide tab for adding a new device to the user"
+            >
+              Hide add new device
+            </Button>
+          )}
+        </div>
+        <div>
+          <Button
             variant="outline-primary"
-            onClick={handleToggleAddDevice} 
-            title="Open tab for adding a new device to the user"
+            onClick={() => setShowDownloadModal(true)}
+            title="Download RDP file for a custom device"
           >
-            <FontAwesomeIcon icon={faPlus} />  Add new device
+            Download RDP file
           </Button>
-        ) : (
-          <Button 
-            variant="outline-secondary"
-            onClick={handleToggleAddDevice}
-            title="Hide tab for adding a new device to the user"
-          >
-            Hide add new device
-          </Button>
-        )}
+        </div>
       </div>
   
       <Collapse in={showCreateUser}>
@@ -230,17 +248,42 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
             {devices.map((device, index) => (
               <tr key={index}>
                 <td>
-                  <DeviceItem device={device} handleDelete={() => deleteDevice(device)} handleEdit={() => editUser(device)} status={deviceStatus[device]} />
+                  <DeviceItem
+                    device={device}
+                    handleDelete={() => deleteDevice(device)}
+                    handleEdit={() => editUser(device)}
+                    status={deviceStatus[device]}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+  
+      <Modal show={showDownloadModal} onHide={() => setShowDownloadModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Download RDP file for following device</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <label>Device Name</label>
+          <input
+            type="text"
+            className="form-control"
+            value={downloadDeviceName}
+            onChange={handleDownloadDeviceChange}
+            placeholder="Enter device name"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDownloadModal(false)}>
+            Close
+          </Button>
+          <DownloadRdp computerName={downloadDeviceName} className="btn btn-secondary" />
+        </Modal.Footer>
+      </Modal>
     </div>
   );
-
-  
   
 };
 
