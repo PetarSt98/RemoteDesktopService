@@ -19,10 +19,11 @@ interface DeviceItemProps {
   status: boolean;
   statusUncompleted: boolean;
   handleDelete: () => void;
+  handleConfirmation: () => void;
   handleEdit: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, handleDelete, handleEdit }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Confirmation',
@@ -56,6 +57,11 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
     handleEdit();
   };
 
+  const callConfirmRequest = () =>
+  {
+    handleConfirmation();
+  };
+
   return (
     <li className="d-flex justify-content-between align-items-center">
     <span className="d-flex align-items-center">
@@ -81,6 +87,11 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
     </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
+      {statusUncompleted && (
+          <Button variant="outline-secondary" size="sm" className="ml-3" onClick={callConfirmRequest} title="Confirm request for this device">
+            Confirm
+          </Button>
+        )}
         <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device">
           <FontAwesomeIcon icon={faEdit} /> 
         </Button>
@@ -139,6 +150,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     onEditDevice && onEditDevice(device);
   };
 
+
+  
   const handleDownloadDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDownloadDeviceName(e.target.value);
   };
@@ -187,6 +200,50 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       .catch(error => {
         console.error(error);
       });
+  };
+
+  const confirmRequest = (device: string) => {
+    Swal.fire({
+      title: 'Confirmation',
+      text: 'Do you want to confirm this request?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + exchangeToken // Note: You may need to get exchangeToken from the parent component
+          }
+        })
+        .then(response => response.text())
+        .then(data => {
+          if (data === "Successful user removal!") {
+            Swal.fire({
+              text: data,
+              icon: 'success'
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({
+              text: data,
+              icon: 'error'
+            });
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Swal.fire({
+            text: "Failed to confirm the request",
+            icon: 'error'
+          });
+        });
+      }
+    });
   };
 
   const deleteDevice = (device: string) => {
@@ -291,6 +348,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
                   <DeviceItem
                     device={device}
                     handleDelete={() => deleteDevice(device)}
+                    handleConfirmation={() => confirmRequest(device)}
                     handleEdit={() => editUser(device)}
                     status={deviceStatus[device]}
                     statusUncompleted={deviceUncompleteStatus[device]}
