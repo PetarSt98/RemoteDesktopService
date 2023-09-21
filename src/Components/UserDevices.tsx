@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import { Button, Modal, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus, faCheck, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faPlus, faCheck, faTimes, faEdit, faQuestion  } from '@fortawesome/free-solid-svg-icons';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 interface UserDevicesProps {
@@ -17,11 +17,12 @@ interface UserDevicesProps {
 interface DeviceItemProps {
   device: string;
   status: boolean;
+  statusUncompleted: boolean;
   handleDelete: () => void;
   handleEdit: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, handleEdit }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, handleDelete, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Confirmation',
@@ -57,16 +58,27 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, h
 
   return (
     <li className="d-flex justify-content-between align-items-center">
-      <span className="d-flex align-items-center"> {/* Existing container */}
+    <span className="d-flex align-items-center">
         <span 
-          className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
-          title={status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access'}
-          style={{ cursor: 'default', marginRight: '10px' }}  // Changed marginLeft to marginRight
+          className={
+            statusUncompleted 
+            ? 'btn btn-sm btn-warning' 
+            : `btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`
+          } 
+          title={
+            statusUncompleted 
+            ? 'The device configuration is pending' 
+            : (status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access')
+          }
+          style={{ cursor: 'default', marginRight: '10px' }}
         >
-          {status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
+          {statusUncompleted 
+            ? <FontAwesomeIcon icon={faQuestion} /> 
+            : (status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />)
+          }
         </span>
         {device}
-      </span>
+    </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
         <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device">
@@ -78,7 +90,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, handleDelete, h
         </button>
       </div>
     </li>
-);
+  );
 };
 
 const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice  }) => {
@@ -86,6 +98,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [downloadDeviceName, setDownloadDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
+  const [deviceUncompleteStatus, setDeviceUncompleteStatus] = useState<{ [key: string]: boolean }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false);
@@ -105,7 +118,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
           setIsLoading(false);
           if (Array.isArray(data)) {
             setDevices(data);
-            checkDeviceStatuses(data); // Get device status right after setting the devices
+            checkDeviceStatuses(data);
+            checkDeviceUncompletedStatuses(data); // Get device status right after setting the devices
           } else {
             console.error("Expected an array but got:", typeof data);
             setDevices([]);
@@ -119,13 +133,16 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     }
   }, [userName, exchangeToken]);
   console.log(onEditDevice);
+
   const editUser = (device: string) => {
     console.log(onEditDevice);
     onEditDevice && onEditDevice(device);
   };
+
   const handleDownloadDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDownloadDeviceName(e.target.value);
   };
+
   const checkDeviceStatuses = (deviceNames: string[]) => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/check`, {
       method: "POST",
@@ -143,6 +160,29 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
         newDeviceStatus[deviceNames[i]] = statuses[i];
       }
       setDeviceStatus(newDeviceStatus);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const checkDeviceUncompletedStatuses = (deviceNames: string[]) => {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/uncompletedCheck`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json', 
+        Authorization: "Bearer " + exchangeToken
+      },
+      body: JSON.stringify({ userName, deviceNames }), // Include userName and deviceNames in request body
+    })
+    .then(response => response.json())
+    .then(statuses => {
+      console.log('Received statuses:', statuses); // Added console.log here
+      const newDeviceUncompleteStatus: { [key: string]: boolean } = {};
+      for (let i = 0; i < deviceNames.length; i++) {
+        newDeviceUncompleteStatus[deviceNames[i]] = statuses[i];
+      }
+      setDeviceUncompleteStatus(newDeviceUncompleteStatus);
       })
       .catch(error => {
         console.error(error);
@@ -253,6 +293,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
                     handleDelete={() => deleteDevice(device)}
                     handleEdit={() => editUser(device)}
                     status={deviceStatus[device]}
+                    statusUncompleted={deviceUncompleteStatus[device]}
                   />
                 </td>
               </tr>
