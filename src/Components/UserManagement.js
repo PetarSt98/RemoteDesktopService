@@ -12,17 +12,15 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
       <Popover.Header as="h3">Help</Popover.Header>
       <Popover.Body>
-        This utility changes the memberships of allowed users and connection options to specific pc from internet.
+        This website manages the list of users allowed to connect to devices from outside CERN.
         <br/><br/>
-        If you need to configure your access from the CERN Network please read on this help page: 
-        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue'}}> Configuring remote connection via Remote Desktop Gateway</a>
+         To be able to modify the list of users allowed to connect to a device, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
-        You must install SafeSign from CMF on your remote machine in order to use smart login.
-        <br/><br/>
-        To be able to modify the membership of the allowed users and connection options, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
-        <br/><br/>
-        Is registered as 'Responsible' or 'Main User' of the target computer. To check or modify this information, visit the network database available at 
+        Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
         <a href="https://landb.cern.ch/portal" style={{color: 'blue'}}> https://landb.cern.ch/portal</a>.
+        <br/><br/>
+        If you would like to learn more or troubleshoot access issues please read: 
+        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue'}}> Configuring remote connection via Remote Desktop Gateway</a>
         <br/><br/>
       </Popover.Body>
     </Popover>
