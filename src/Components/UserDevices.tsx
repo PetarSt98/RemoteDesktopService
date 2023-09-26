@@ -26,7 +26,7 @@ interface DeviceItemProps {
 const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
-      title: 'Confirmation',
+      title: 'Removal Confirmation',
       text: 'Are you sure you want to remove this device from the user?',
       icon: 'question',
       showCancelButton: true,
@@ -89,7 +89,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
       <div className="d-flex align-items-center">
       {statusUncompleted && (
           <Button variant="outline-secondary" size="sm" className="ml-3" onClick={callConfirmRequest} title="Confirm request for this device">
-            Confirm
+            Mark as Synchronized
           </Button>
         )}
         <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device">
@@ -204,8 +204,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
 
   const confirmRequest = (device: string) => {
     Swal.fire({
-      title: 'Confirmation',
-      text: 'Do you want to confirm this request?',
+      title: 'Confirm Manual Synchronization',
+      text: 'Have you manually updated the "Remote Desktop Users" local group on this device and wish to mark it as synchronized?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Confirm',
@@ -214,14 +214,14 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
-          method: "DELETE",
+          method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken // Note: You may need to get exchangeToken from the parent component
           }
         })
         .then(response => response.text())
         .then(data => {
-          if (data === "Successful user removal!") {
+          if (data === "Successful user confirmation!") {
             Swal.fire({
               text: data,
               icon: 'success'
