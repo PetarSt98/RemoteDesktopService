@@ -180,7 +180,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const checkDeviceUncompletedStatuses = (deviceNames: string[]) => {
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/uncompletedCheck`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/uncompletedCheck`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', 
@@ -213,7 +213,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken // Note: You may need to get exchangeToken from the parent component
