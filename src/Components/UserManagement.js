@@ -16,7 +16,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+      fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
