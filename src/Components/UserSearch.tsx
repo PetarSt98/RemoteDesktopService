@@ -228,10 +228,11 @@ return (
     {!searchSuccessful && hideSearch && (
       <div style={{fontSize: '1.1em', color: '#808080', marginTop: '20px'}}>
         <ol>
-          <li>Locate and click on the button below to manage users for a device:
-            <Button variant="outline-primary" size="sm" className="ml-3" style={{marginLeft: '5px'}} title="Representative Edit Button" disabled>
+          <li>Locate and click on the button 
+            <Button variant="outline-primary" size="sm" className="ml-3" style={{marginLeft: '5px', marginRight: '5px'}} title="Representative Edit Button" disabled>
               <FontAwesomeIcon icon={faEdit} />
             </Button>
+            to manage users for a device.
           </li>
           <li>This allows you to view or edit the users associated with the selected device.</li>
         </ol>
