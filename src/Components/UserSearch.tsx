@@ -17,10 +17,11 @@ interface UserSearchProps {
   primaryAccount: string;
   deviceNameForEdit: string;
   onEditComplete: () => void;
+  hideSearch: boolean;  // Add this prop
 }
 
 const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
-  const { token, userName, primaryAccount, deviceNameForEdit } = props;
+  const { token, userName, primaryAccount, deviceNameForEdit, hideSearch } = props;
   const [deviceName, setDeviceName] = useState('');
   const [searchedDeviceName, setSearchedDeviceName] = useState("");
   const [devices, setDevices] = useState<string[]>([]);
@@ -222,6 +223,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 return (
   <div className="card p-3 h-100">
     <h4 className="card-title">Manage user access for a configured device</h4>
+    {!hideSearch && (
     <Form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
       <div className="input-group mb-3">
         <input
@@ -255,11 +257,26 @@ return (
         </div>
       </div>
     </Form>
+    )}
     {searchSuccessful && (
       <div className="d-flex align-items-center">
         <strong>Device: {searchedDeviceName.toUpperCase()}</strong>
         <hr className="flex-grow-1 mx-3" style={{ border: "1px solid black" }} />
         <div>
+          {hideSearch && (
+            <Button 
+              type="button"
+              className="btn-sm ml-3"
+              variant="outline-secondary" // Add this prop for grey outlines
+              onClick={(e) => {
+                  e.preventDefault();  
+                  handleClearSearch();
+              }}
+              title="Clear Search"
+            >  
+              X
+            </Button>
+          )}
           <Button
             variant={showAddUser ? "outline-secondary" : "outline-primary"}
             onClick={() => setShowAddUser(!showAddUser)}

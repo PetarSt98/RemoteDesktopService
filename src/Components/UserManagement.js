@@ -6,8 +6,12 @@ import UserDevices from './UserDevices';
 import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
 import '../App.css';
 
+const hideSearchBar = true;
+
 const UserManagement = ({ token, userName, primaryAccount }) => {
   const [selectedDevice, setSelectedDevice] = useState("");
+  const [hideSearch, setHideSearch] = useState(hideSearchBar); 
+
   const popover = (
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
       <Popover.Header as="h3">Help</Popover.Header>
@@ -46,7 +50,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
           <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
         </div>
         <div className="col-md-6">
-        <UserSearch token={token} userName={userName} primaryAccount={primaryAccount} deviceNameForEdit={selectedDevice} onEditComplete={() => setSelectedDevice("")} />
+        <UserSearch token={token} userName={userName} primaryAccount={primaryAccount} deviceNameForEdit={selectedDevice} onEditComplete={() => {setSelectedDevice(""); setHideSearch(hideSearch);}} hideSearch={hideSearch} />
 
 
 
