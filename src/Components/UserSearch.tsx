@@ -5,7 +5,7 @@ import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import Swal from 'sweetalert2';
 import { Form, Collapse, Button, Spinner, Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 export interface UserSearchRef {
   handleSearch: () => void;
@@ -37,6 +37,8 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false)
   const [isEditComplete, setIsEditComplete] = useState(false);
+
+  
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (deviceNameForEdit) {
@@ -223,6 +225,18 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 return (
   <div className="card p-3 h-100">
     <h4 className="card-title">Manage user access for a configured device</h4>
+    {!searchSuccessful && hideSearch && (
+      <div style={{fontSize: '1.1em', color: '#808080', marginTop: '20px'}}>
+        <ol>
+          <li>Locate and click on the button below to manage users for a device:
+            <Button variant="outline-primary" size="sm" className="ml-3" style={{marginLeft: '5px'}} title="Representative Edit Button" disabled>
+              <FontAwesomeIcon icon={faEdit} />
+            </Button>
+          </li>
+          <li>This allows you to view or edit the users associated with the selected device.</li>
+        </ol>
+      </div>
+    )}
     {!hideSearch && (
     <Form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
       <div className="input-group mb-3">

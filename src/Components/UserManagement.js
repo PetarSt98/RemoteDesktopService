@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 import UserSearch, { UserSearchRef } from './UserSearch';
 import CreateUser from './CreateUser';
 import UserDevices from './UserDevices';
+import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
 import '../App.css';
 
@@ -11,6 +12,24 @@ const hideSearchBar = true;
 const UserManagement = ({ token, userName, primaryAccount }) => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [hideSearch, setHideSearch] = useState(hideSearchBar); 
+  const [exchangeToken, setExchangeToken] = useState("");
+  useTokenExchangeHandler(token, setExchangeToken);
+  useEffect(() => {
+    if (exchangeToken.length > 0) {
+      fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + exchangeToken
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Assuming your controller returns a boolean
+        setHideSearch(data);  // Update the hideSearch state with the returned value
+      })
+      .catch(error => console.error('Error fetching the hideSearch data:', error));
+    }
+  }, [exchangeToken, userName]); 
 
   const popover = (
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
@@ -18,7 +37,10 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
       <Popover.Body>
         This website manages the list of users allowed to connect to devices from outside CERN.
         <br/><br/>
-         To be able to modify the list of users allowed to connect to a device, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
+        To find the instructions for how to use the website, please use the 
+        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue'}}> manual.</a>
+        <br/><br/> 
+        To be able to modify the list of users allowed to connect to a device, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
         Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
         <a href="https://landb.cern.ch/portal" style={{color: 'blue'}}> https://landb.cern.ch/portal</a>.
