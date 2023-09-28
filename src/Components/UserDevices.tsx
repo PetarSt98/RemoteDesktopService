@@ -114,6 +114,10 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [exchangeToken, setExchangeToken] = useState("");
   const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // New state for add device visibility
+  const [searchTerm, setSearchTerm] = useState(""); // New state for the search term
+  const [filteredDevices, setFilteredDevices] = useState<string[]>([]); // New state for filtered devices
+  const [isSearchVisible, setIsSearchVisible] = useState(false); // New state for search visibility
+
   useTokenExchangeHandler(token, setExchangeToken);
   console.log("Token: ", exchangeToken)
   useEffect(() => {
@@ -150,8 +154,12 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     onEditDevice && onEditDevice(device);
   };
 
+  useEffect(() => {
+    // Filter devices based on the search term
+    const filtered = devices.filter(device => device.toLowerCase().startsWith(searchTerm.toLowerCase()));
+    setFilteredDevices(filtered);
+  }, [searchTerm, devices]);
 
-  
   const handleDownloadDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDownloadDeviceName(e.target.value);
   };
@@ -289,8 +297,20 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Your remote-enabled devices</h4>
       </div>
-  
-      <div className="d-flex justify-content-between align-items-center">
+    
+      <div className="d-flex justify-content-between align-items-center mb-2">
+      <Button
+        variant={isSearchVisible ? "outline-secondary" : "outline-primary"}
+        onClick={() => {
+          if (isSearchVisible) {
+            setSearchTerm('');  // Clear searchTerm when hiding the search bar
+          }
+          setIsSearchVisible(!isSearchVisible);
+        }}
+        title="Toggle Search Bar"
+      >
+        {isSearchVisible ? "Hide Search" : "Show Search"}
+      </Button>
         <div>
           {!showCreateUser ? (
             <Button
@@ -310,30 +330,40 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
             </Button>
           )}
         </div>
-        <div>
-          <Button
-            variant="outline-primary"
-            onClick={() => setShowDownloadModal(true)}
-            title="Download RDP file for a custom device"
-          >
-            Download RDP file
-          </Button>
-        </div>
+        <Button
+          variant="outline-primary"
+          onClick={() => setShowDownloadModal(true)}
+          title="Download RDP file for a custom device"
+        >
+          Download RDP file
+        </Button>
       </div>
   
+      <Collapse in={isSearchVisible}>
+      <div className="mt-2 mb-2">
+        <input 
+          type="text"
+          className="form-control"
+          placeholder="Search devices..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+      </div>
+    </Collapse>
+    
       <Collapse in={showCreateUser}>
         <div className="mt-3">
           <CreateUser token={token} userName={userName} />
         </div>
       </Collapse>
-  
+    
       {devices.length === 0 && !showCreateUser && !isLoading && (
         <div className="alert alert-info" role="alert">
           No devices found for the user.
         </div>
       )}
-  
-      {devices.length > 0 && (
+    
+      {filteredDevices.length > 0 && (
         <table className="table table-striped">
           <thead>
             <tr>
@@ -342,7 +372,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
             </tr>
           </thead>
           <tbody>
-            {devices.map((device, index) => (
+            {filteredDevices.map((device, index) => (
               <tr key={index}>
                 <td>
                   <DeviceItem
@@ -359,7 +389,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
           </tbody>
         </table>
       )}
-  
+    
       <Modal show={showDownloadModal} onHide={() => setShowDownloadModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Download RDP file for following device</Modal.Title>
@@ -383,6 +413,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       </Modal>
     </div>
   );
+  
   
 };
 
