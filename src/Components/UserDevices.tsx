@@ -7,6 +7,7 @@ import { Button, Modal, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faPlus, faCheck, faTimes, faEdit, faQuestion  } from '@fortawesome/free-solid-svg-icons';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { FiSearch, FiX } from 'react-icons/fi';
 
 interface UserDevicesProps {
   token: string;
@@ -300,17 +301,18 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     
       <div className="d-flex justify-content-between align-items-center mb-2">
       <Button
-        variant={isSearchVisible ? "outline-secondary" : "outline-primary"}
-        onClick={() => {
-          if (isSearchVisible) {
-            setSearchTerm('');  // Clear searchTerm when hiding the search bar
-          }
-          setIsSearchVisible(!isSearchVisible);
-        }}
-        title="Toggle Search Bar"
-      >
-        {isSearchVisible ? "Hide Search" : "Show Search"}
-      </Button>
+      variant={isSearchVisible ? "outline-secondary" : "outline-primary"}
+      onClick={() => {
+        if (isSearchVisible) {
+          setSearchTerm('');  // Clear searchTerm when hiding the search bar
+        }
+        setIsSearchVisible(!isSearchVisible);
+      }}
+      title="Toggle Search Bar"
+    >
+      {isSearchVisible ? <FiX /> : <FiSearch />}
+      {isSearchVisible ? " Hide Search" : " Search"}
+    </Button>
         <div>
           {!showCreateUser ? (
             <Button

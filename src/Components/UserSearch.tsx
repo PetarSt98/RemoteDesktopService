@@ -224,7 +224,11 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 
 return (
   <div className="card p-3 h-100">
-    <h4 className="card-title">Manage user access for a configured device</h4>
+    {!searchSuccessful && hideSearch ? (
+    <h4 className="card-title">You can use the search feature if needed for managing user access to devices.</h4>
+    ) : (
+      <h4 className="card-title">Manage user access for a configured device</h4>
+    )}
     {!searchSuccessful && hideSearch && (
       <div style={{fontSize: '1.1em', color: '#808080', marginTop: '20px'}}>
         <ol>
