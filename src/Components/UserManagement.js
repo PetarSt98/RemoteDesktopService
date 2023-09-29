@@ -58,9 +58,9 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   }
   
   return (
-    <div className="container py-5 mt-5" style={{ background: '#f5f8fa' }}>
-      <div className="d-flex justify-content-center align-items-center mb-5">
-        <h1 className="title" style={{position: 'absolute'}}>Manage the Remote Desktop Connection Access For a Client PC</h1>
+    <div className="container py-3 mt-3" style={{ background: '#f5f8fa' }}>
+      <div className="d-flex justify-content-center align-items-center mb-3">
+        <h1 className="title" style={{position: 'absolute', marginTop: '0', marginBottom: '0'}}>Manage the Remote Desktop Connection Access For a Client PC</h1>
         <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
         <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
           <Button variant="secondary">Help</Button>
