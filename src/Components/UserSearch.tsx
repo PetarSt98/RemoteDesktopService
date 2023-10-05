@@ -251,6 +251,7 @@ return (
           placeholder="Enter device name..."
           value={deviceName}
           onChange={(e) => setDeviceName(e.target.value)}
+          style={{ marginRight: '4px' }}
         />
     <div className="input-group-append">
         {deviceName && 
@@ -262,6 +263,7 @@ return (
                 handleClearSearch();
             }}
             title="Clear Search"
+            style={{ marginRight: '4px' }}
           >  
             X
           </button>
@@ -292,6 +294,7 @@ return (
                   handleClearSearch();
               }}
               title="Clear Search"
+              style={{ marginRight: '4px' }}
             >  
               X
             </Button>
@@ -312,6 +315,7 @@ return (
             onClick={() => handleDelete(userName)}
             className="btn-sm ml-3"
             title="Remove device from user"
+            style={{ marginLeft: '4px' }}
             disabled={!searchSuccessful}
           >
             <FontAwesomeIcon icon={faTrashAlt} />
@@ -332,7 +336,7 @@ return (
               disabled={isLoading} // disable the input while loading
             />
             <div className="input-group-append">
-              <Button variant="outline-primary" type="submit" title="Add new user to device" disabled={isLoading}>
+              <Button variant="outline-primary" type="submit" title="Add new user to device" style={{ marginLeft: '4px' }} disabled={isLoading}>
                 {isLoading ? (  // Add a spinner when loading
                   <Spinner
                     as="span"

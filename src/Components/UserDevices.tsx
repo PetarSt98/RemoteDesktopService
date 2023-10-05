@@ -93,11 +93,11 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
             Mark as Synchronized
           </Button>
         )}
-        <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device">
+        <Button variant="outline-primary" size="sm" className="ml-3" onClick={confirmEditUser} title="Manage users for this device" style={{ marginLeft: '4px' }}>
           <FontAwesomeIcon icon={faEdit} /> 
         </Button>
         <DownloadRdp computerName={device} />
-        <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user">
+        <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user" style={{ marginLeft: '4px' }}>
           <FontAwesomeIcon icon={faTrashAlt} /> 
         </button>
       </div>
