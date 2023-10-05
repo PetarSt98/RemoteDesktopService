@@ -43,6 +43,7 @@ export const DownloadRdp = ({ computerName, className }: DownloadRdpProps) => {
         className={className ? className : `btn btn-outline-success btn-sm ${shouldDisable ? 'disabled' : ''}`}
         onClick={downloadRdp}
         title="Download RDP file"
+        style={{ marginLeft: '4px' }}
       >
         <FontAwesomeIcon icon={faDownload} />
 

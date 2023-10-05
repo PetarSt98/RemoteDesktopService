@@ -25,7 +25,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
       .then(response => response.json())
       .then(data => {
         // Assuming your controller returns a boolean
-        setHideSearch(data);  // Update the hideSearch state with the returned value
+        setHideSearch(!data);  // Update the hideSearch state with the returned value
       })
       .catch(error => console.error('Error fetching the hideSearch data:', error));
     }
@@ -60,7 +60,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   return (
     <div className="container py-3 mt-3" style={{ background: '#f5f8fa' }}>
       <div className="d-flex justify-content-center align-items-center mb-3">
-        <h1 className="title" style={{position: 'absolute', marginTop: '0', marginBottom: '0'}}>Manage the Remote Desktop Connection Access For a Client PC</h1>
+        <h1 className="title" style={{position: 'absolute', marginTop: '0', marginBottom: '0'}}>Manage the Remote Desktop connection access for a device</h1>
         <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
         <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
           <Button variant="secondary">Help</Button>

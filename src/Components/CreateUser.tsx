@@ -70,7 +70,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
             disabled={isLoading} // Input field is disabled while loading
           />
           <div className="input-group-append">
-            <button type="submit" className="btn btn-outline-primary" disabled={isLoading} title="Add new device to user">
+            <button type="submit" className="btn btn-outline-primary" disabled={isLoading} title="Add new device to user" style={{ marginLeft: '4px' }}>
               {isLoading ? (
                 <Spinner
                   as="span"
