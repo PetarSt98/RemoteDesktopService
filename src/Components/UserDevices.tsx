@@ -157,7 +157,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
 
   useEffect(() => {
     // Filter devices based on the search term
-    const filtered = devices.filter(device => device.toLowerCase().startsWith(searchTerm.toLowerCase()));
+    const filtered = devices.filter(device => device.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredDevices(filtered);
   }, [searchTerm, devices]);
 

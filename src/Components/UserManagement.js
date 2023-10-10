@@ -25,7 +25,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
       .then(response => response.json())
       .then(data => {
         // Assuming your controller returns a boolean
-        setHideSearch(!data);  // Update the hideSearch state with the returned value
+        setHideSearch(data);  // Update the hideSearch state with the returned value
       })
       .catch(error => console.error('Error fetching the hideSearch data:', error));
     }
@@ -38,15 +38,15 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
         This website manages the list of users allowed to connect to devices from outside CERN.
         <br/><br/>
         To find the instructions for how to use the website, please use the 
-        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue'}}> manual.</a>
+        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual.</a>
         <br/><br/> 
         To be able to modify the list of users allowed to connect to a device, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
         Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
-        <a href="https://landb.cern.ch/portal" style={{color: 'blue'}}> https://landb.cern.ch/portal</a>.
+        <a href="https://landb.cern.ch/portal" style={{color: 'blue', marginLeft: '4px'}}>https://landb.cern.ch/portal</a>.
         <br/><br/>
         If you would like to learn more or troubleshoot access issues please read: 
-        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue'}}> Configuring remote connection via Remote Desktop Gateway</a>
+        <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue', marginLeft: '4px'}}>Configuring remote connection via Remote Desktop Gateway</a>
         <br/><br/>
       </Popover.Body>
     </Popover>
