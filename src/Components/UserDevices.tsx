@@ -256,7 +256,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const deleteDevice = (device: string) => {
-    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}&signedInUser=${userName}&primaryUser=${userName}&addDeviceOrUser=device`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + exchangeToken

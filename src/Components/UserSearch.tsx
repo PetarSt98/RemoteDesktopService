@@ -124,6 +124,18 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     setSearchClicked(false); // reset the search click state
   };
 
+  var signedInUser = "";
+  var primaryUser = "";
+  if (primaryAccount === "Primary")
+  {
+    primaryUser = "Primary";
+  }
+  else
+  {
+    primaryUser = userName;
+  }
+  signedInUser = userName;
+
   const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
       title: 'Confirmation',
@@ -136,7 +148,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -175,17 +187,6 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   //   event.preventDefault();
   //   handleSearch();
   // };
-  var signedInUser = "";
-  var primaryUser = "";
-  if (primaryAccount === "Primary")
-  {
-    primaryUser = "Primary";
-  }
-  else
-  {
-    primaryUser = userName;
-  }
-  signedInUser = userName;
 
 
   const handleNewUserSubmit = async (event: React.FormEvent) => {
