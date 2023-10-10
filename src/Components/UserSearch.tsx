@@ -148,7 +148,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
