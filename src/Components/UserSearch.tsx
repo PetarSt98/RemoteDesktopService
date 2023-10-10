@@ -176,14 +176,16 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   //   handleSearch();
   // };
   var signedInUser = "";
+  var primaryUser = "";
   if (primaryAccount === "Primary")
   {
-    signedInUser = "Primary";
+    primaryUser = "Primary";
   }
   else
   {
-    signedInUser = userName;
+    primaryUser = userName;
   }
+  signedInUser = userName;
 
 
   const handleNewUserSubmit = async (event: React.FormEvent) => {
@@ -197,7 +199,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
           'Content-Type': 'application/json',
           Authorization: "Bearer " +  exchangeToken
         },
-        body: JSON.stringify({ userName: newUserName, deviceName: searchedDeviceName, SignedInUser: signedInUser,  AddDeviceOrUser: 'user' }),  // use "deviceName" instead of "searchedDeviceName" in the request body
+        body: JSON.stringify({ userName: newUserName, deviceName: searchedDeviceName, PrimaryUser: primaryUser, SignedInUser: signedInUser,  AddDeviceOrUser: 'user' }),  // use "deviceName" instead of "searchedDeviceName" in the request body
       });
       const data = await response.text();
       if (data === 'Successfully added the user!') {
