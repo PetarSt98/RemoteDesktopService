@@ -19,12 +19,13 @@ interface DeviceItemProps {
   device: string;
   status: boolean;
   statusUncompleted: boolean;
+  date: string;
   handleDelete: () => void;
   handleConfirmation: () => void;
   handleEdit: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, handleDelete, handleConfirmation, handleEdit }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, date, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Removal Confirmation',
@@ -84,7 +85,9 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
             : (status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />)
           }
         </span>
-        {device}
+          <span title={`Date: ${date}`}>
+            {device}
+        </span>
     </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
@@ -111,6 +114,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [devices, setDevices] = useState<string[]>([]);
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [deviceUncompleteStatus, setDeviceUncompleteStatus] = useState<{ [key: string]: boolean }>({});
+  const [deviceDates, setDeviceDates] = useState<{ [key: string]: string }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false);
@@ -135,6 +139,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
           if (Array.isArray(data)) {
             setDevices(data);
             checkDeviceStatuses(data);
+            checkDeviceDates(data);
             checkDeviceUncompletedStatuses(data); // Get device status right after setting the devices
           } else {
             console.error("Expected an array but got:", typeof data);
@@ -182,6 +187,29 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
         newDeviceStatus[deviceNames[i]] = statuses[i];
       }
       setDeviceStatus(newDeviceStatus);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const checkDeviceDates = (deviceNames: string[]) => {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/date_check`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json', 
+        Authorization: "Bearer " + exchangeToken
+      },
+      body: JSON.stringify({ userName, deviceNames }), // Include userName and deviceNames in request body
+    })
+    .then(response => response.json())
+    .then(statuses => {
+      console.log('Received statuses:', statuses); // Added console.log here
+      const deviceDates: { [key: string]: string } = {};
+      for (let i = 0; i < deviceNames.length; i++) {
+        deviceDates[deviceNames[i]] = statuses[i];
+      }
+      setDeviceDates(deviceDates);
       })
       .catch(error => {
         console.error(error);
@@ -384,6 +412,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
                     handleEdit={() => editUser(device)}
                     status={deviceStatus[device]}
                     statusUncompleted={deviceUncompleteStatus[device]}
+                    date={deviceDates[device]}
                   />
                 </td>
               </tr>
