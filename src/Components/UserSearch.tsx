@@ -138,8 +138,8 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 
   const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
-      title: 'Confirmation',
-      text: 'Are you sure you want to remove this device from the user?',
+      title: 'Disable remoting',
+      text: 'Are you sure you want to disable remoting for this user?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes',
