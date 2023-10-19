@@ -28,8 +28,8 @@ interface DeviceItemProps {
 const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, date, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
-      title: 'Removal Confirmation',
-      text: 'Are you sure you want to remove this device from the user?',
+      title: 'Disable remoting',
+      text: 'Are you sure you want to disable remoting for this device?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes',
@@ -85,7 +85,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
             : (status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />)
           }
         </span>
-          <span title={`Date: ${date}`}>
+          <span title={`Added on: ${date}`}>
             {device}
         </span>
     </span>
