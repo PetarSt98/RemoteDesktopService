@@ -194,7 +194,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const checkDeviceDates = (deviceNames: string[]) => {
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/date_check`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/date_check`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', 
