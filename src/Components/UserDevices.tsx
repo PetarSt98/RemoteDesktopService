@@ -28,8 +28,8 @@ interface DeviceItemProps {
 const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, date, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
-      title: 'Disable remoting',
-      text: 'Are you sure you want to disable remoting for this device?',
+      title: 'Disable Remote Desktop access from outside CERN',
+      text: `Click Yes, to disable Remote Desktop access to ${device} from outside CERN for yourself.`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes',

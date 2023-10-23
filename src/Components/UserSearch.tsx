@@ -138,8 +138,8 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 
   const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
-      title: 'Disable remoting',
-      text: 'Are you sure you want to disable remoting for this user?',
+      title: 'Disable Remote Desktop access from outside CERN',
+      text: `Click Yes, to disable Remote Desktop access to ${searchedDeviceName} from outside CERN for ${UserNameToDelete}.`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes',
