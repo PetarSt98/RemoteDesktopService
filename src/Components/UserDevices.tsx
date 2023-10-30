@@ -19,13 +19,14 @@ interface DeviceItemProps {
   device: string;
   status: boolean;
   statusUncompleted: boolean;
-  date: string;
+  dateAdd: string;
+  dateUpdate: string;
   handleDelete: () => void;
   handleConfirmation: () => void;
   handleEdit: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, date, handleDelete, handleConfirmation, handleEdit }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, dateAdd, dateUpdate, handleDelete, handleConfirmation, handleEdit }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Disable Remote Desktop access from outside CERN',
@@ -85,7 +86,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
             : (status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />)
           }
         </span>
-          <span title={`Added on: ${date}`}>
+          <span title={`Added on: ${dateAdd}\nLast update: ${dateUpdate}`}>
             {device}
         </span>
     </span>
@@ -114,7 +115,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [devices, setDevices] = useState<string[]>([]);
   const [deviceStatus, setDeviceStatus] = useState<{ [key: string]: boolean }>({});
   const [deviceUncompleteStatus, setDeviceUncompleteStatus] = useState<{ [key: string]: boolean }>({});
-  const [deviceDates, setDeviceDates] = useState<{ [key: string]: string }>({});
+  const [deviceAddDates, setDeviceAddDates] = useState<{ [key: string]: string }>({});
+  const [deviceUpdateDates, setDeviceUpdateDates] = useState<{ [key: string]: string }>({});
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [exchangeToken, setExchangeToken] = useState("");
   const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false);
@@ -205,11 +207,14 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     .then(response => response.json())
     .then(statuses => {
       console.log('Received statuses:', statuses); // Added console.log here
-      const deviceDates: { [key: string]: string } = {};
+      const deviceAddDates: { [key: string]: string } = {};
+      const deviceUpdateDates: { [key: string]: string } = {};
       for (let i = 0; i < deviceNames.length; i++) {
-        deviceDates[deviceNames[i]] = statuses[i];
+        deviceAddDates[deviceNames[i]] = statuses[i].createDate;
+        deviceUpdateDates[deviceNames[i]] = statuses[i].updateDate;
       }
-      setDeviceDates(deviceDates);
+      setDeviceAddDates(deviceAddDates);
+      setDeviceUpdateDates(deviceUpdateDates);
       })
       .catch(error => {
         console.error(error);
@@ -412,7 +417,8 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
                     handleEdit={() => editUser(device)}
                     status={deviceStatus[device]}
                     statusUncompleted={deviceUncompleteStatus[device]}
-                    date={deviceDates[device]}
+                    dateAdd={deviceAddDates[device]}
+                    dateUpdate={deviceUpdateDates[device]}
                   />
                 </td>
               </tr>
