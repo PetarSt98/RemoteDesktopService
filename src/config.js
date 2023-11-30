@@ -7,5 +7,5 @@ export const keycloakAudience = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
 export const refreshKeycloakToken =
   process.env.REACT_APP_KEYCLOAK_REFRESH_TOKEN === "true";
 
-console.log("Setting environment as:");
-console.log(process.env);
+// console.log("Setting environment as:");
+// console.log(process.env);

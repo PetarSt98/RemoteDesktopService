@@ -126,7 +126,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [isSearchVisible, setIsSearchVisible] = useState(false); // New state for search visibility
 
   useTokenExchangeHandler(token, setExchangeToken);
-  console.log("Token: ", exchangeToken)
+  // console.log("Token: ", exchangeToken)
   useEffect(() => {
     if (exchangeToken.length > 0) {
       fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {
@@ -155,10 +155,10 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
         });
     }
   }, [userName, exchangeToken]);
-  console.log(onEditDevice);
+  // console.log(onEditDevice);
 
   const editUser = (device: string) => {
-    console.log(onEditDevice);
+    // console.log(onEditDevice);
     onEditDevice && onEditDevice(device);
   };
 
@@ -183,7 +183,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     })
     .then(response => response.json())
     .then(statuses => {
-      console.log('Received statuses:', statuses); // Added console.log here
+      // console.log('Received statuses:', statuses); // Added console.log here
       const newDeviceStatus: { [key: string]: boolean } = {};
       for (let i = 0; i < deviceNames.length; i++) {
         newDeviceStatus[deviceNames[i]] = statuses[i];
@@ -206,7 +206,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     })
     .then(response => response.json())
     .then(statuses => {
-      console.log('Received statuses:', statuses); // Added console.log here
+      // console.log('Received statuses:', statuses); // Added console.log here
       const deviceAddDates: { [key: string]: string } = {};
       const deviceUpdateDates: { [key: string]: string } = {};
       for (let i = 0; i < deviceNames.length; i++) {
@@ -232,7 +232,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     })
     .then(response => response.json())
     .then(statuses => {
-      console.log('Received statuses:', statuses); // Added console.log here
+      // console.log('Received statuses:', statuses); // Added console.log here
       const newDeviceUncompleteStatus: { [key: string]: boolean } = {};
       for (let i = 0; i < deviceNames.length; i++) {
         newDeviceUncompleteStatus[deviceNames[i]] = statuses[i];
