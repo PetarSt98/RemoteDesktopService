@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { Form, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 interface CreateUserProps {
   token: string;
   userName: string;
+  editUser: (deviceName: string) => void;
 }
 
-const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
+const CreateUser: React.FC<CreateUserProps> = ({ token, userName, editUser}) => {
   const [deviceName, setDeviceName] = useState(''); 
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -70,6 +73,16 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
             disabled={isLoading} // Input field is disabled while loading
           />
           <div className="input-group-append">
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            disabled={isLoading}
+            title="Manage users for this device"
+            onClick={() => editUser(deviceName)}
+            style={{ marginLeft: '4px' }}
+          >
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
             <button type="submit" className="btn btn-outline-primary" disabled={isLoading} title="Add new device to user" style={{ marginLeft: '4px' }}>
               {isLoading ? (
                 <Spinner
@@ -80,13 +93,15 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName }) => {
                   aria-hidden="true"
                 />
               ) : (
-                "Add"
+                <>
+                <FontAwesomeIcon icon={faPlus} /> Add
+              </>
               )}
             </button>
           </div>
         </div>
       </Form>
-
+      
       {/* Display the response message in an alert */}
       {message && (
         <div className={`alert alert-${messageType}`} role="alert">

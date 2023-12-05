@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import { Button, Modal, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus, faCheck, faTimes, faEdit, faQuestion  } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faCog , faCheck, faTimes, faEdit, faQuestion  } from '@fortawesome/free-solid-svg-icons';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FiSearch, FiX } from 'react-icons/fi';
 
@@ -353,7 +353,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
               onClick={handleToggleAddDevice}
               title="Open tab for adding a new device to the user"
             >
-              <FontAwesomeIcon icon={faPlus} /> Add new device
+              <FontAwesomeIcon icon={faCog} /> Configure device
             </Button>
           ) : (
             <Button
@@ -361,7 +361,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
               onClick={handleToggleAddDevice}
               title="Hide tab for adding a new device to the user"
             >
-              Hide add new device
+              <FiX /> Hide configure device
             </Button>
           )}
         </div>
@@ -388,7 +388,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     
       <Collapse in={showCreateUser}>
         <div className="mt-3">
-          <CreateUser token={token} userName={userName} />
+          <CreateUser token={token} userName={userName} editUser={editUser} />
         </div>
       </Collapse>
     
