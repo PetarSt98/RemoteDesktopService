@@ -21,7 +21,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
       return; // Exit the useEffect if conditions are not met
     }
 
-    fetch('https://localhost:44354/api/search_tabel/acces_init', {
+    fetch('https://rdgateway-backend-test.app.cern.ch/api/search_tabel/acces_init', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
       body: JSON.stringify({ device: searchedDeviceName, Users: devices }),
@@ -36,7 +36,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
 
   const handleAccess = (device:string) => {
     const currentStatus = deviceLockStatus[device];
-    fetch('https://localhost:44354/api/search_tabel/access', {
+    fetch('https://rdgateway-backend-test.app.cern.ch/api/search_tabel/access', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
       body: JSON.stringify({ signedInUser: signedInUser, searchedDeviceName: searchedDeviceName, user: device, lockStatus: !currentStatus }),
