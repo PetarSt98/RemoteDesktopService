@@ -126,7 +126,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   const [isSearchVisible, setIsSearchVisible] = useState(false); // New state for search visibility
 
   useTokenExchangeHandler(token, setExchangeToken);
-  console.log("Token: ", exchangeToken)
+  // console.log("Token: ", exchangeToken)
   useEffect(() => {
     if (exchangeToken.length > 0) {
       fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/search?userName=${userName}`, {

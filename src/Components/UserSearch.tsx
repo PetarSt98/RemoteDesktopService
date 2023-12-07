@@ -68,7 +68,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     else 
     {
         const uppercasedDeviceName = deviceNameToUse.toUpperCase();
-        fetch(`https://rdgateway-backend-test.app.cern.ch/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
+        fetch(`https://localhost:44354/api/search_tabel/search?userName=${userName}&deviceName=${uppercasedDeviceName}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + exchangeToken
@@ -88,7 +88,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
                     setDevices(data);
                     setSearchSuccessful(true);
                     setSearchedDeviceName(deviceNameToUse);
-                    // onEditComplete();
+                    setSearchClicked(true); 
                     props.onEditComplete();
                 } else {
                     console.error("Expected an array but got:", typeof data);
@@ -148,7 +148,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
+        fetch(`https://localhost:44354/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -194,7 +194,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     // setNewUserLoading(true);
     setIsLoading(true);
     try{
-      const response = await fetch('https://rdgateway-backend-test.app.cern.ch/api/add_pop_up/add', {
+      const response = await fetch('https://localhost:44354/api/add_pop_up/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -363,7 +363,13 @@ return (
         )}
       </div>
     </Collapse>
-    {searchClicked && <DeviceList devices={devices} handleDelete={handleDelete} searchedDeviceName={searchedDeviceName} />}
+    {searchClicked && <DeviceList
+  devices={devices}
+  handleDelete={handleDelete}
+  searchedDeviceName={searchedDeviceName}
+  signedInUser={signedInUser}
+  exchangeToken={exchangeToken}
+/>}
   </div>
 );
 });
