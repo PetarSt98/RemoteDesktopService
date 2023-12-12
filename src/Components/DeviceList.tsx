@@ -54,9 +54,14 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
 
   if (!devices.length) {
     if (searchSuccessful)
-      return  <p>No users found for the device.</p>;
+    {
+      return <p style={{ margin: '20px 0', padding: '10px', backgroundColor: '#f0f0f0', border: '1px solid #cccccc', color: '#666666', textAlign: 'center', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}>No users found for the device.</p>;
+
+    }
     else
-    return  <p>No device found.</p>;
+    {
+      return <p style={{ margin: '20px 0', padding: '10px', backgroundColor: '#ffeded', border: '1px solid #ff5c5c', color: '#ff5c5c', textAlign: 'center', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold' }}>No device found.</p>;
+    }
   }
 
   return (
