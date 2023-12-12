@@ -9,9 +9,10 @@ type DeviceListProps = {
   searchedDeviceName: string;
   signedInUser: string;
   exchangeToken: string;
+  searchSuccessful: boolean;
 };
 
-const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searchedDeviceName, signedInUser, exchangeToken }) => {
+const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searchedDeviceName, signedInUser, exchangeToken, searchSuccessful }) => {
   const [deviceLockStatus, setDeviceLockStatus] = useState<{ [deviceName: string]: boolean }>({});
 
   useEffect(() => {
@@ -52,7 +53,10 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
   };
 
   if (!devices.length) {
-    return <p>No users found for the device.</p>;
+    if (searchSuccessful)
+      return  <p>No users found for the device.</p>;
+    else
+    return  <p>No device found.</p>;
   }
 
   return (
