@@ -90,7 +90,13 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
                     setSearchedDeviceName(deviceNameToUse);
                     setSearchClicked(true); 
                     props.onEditComplete();
-                } else {
+                }else if(data.length == 0){
+                    setDevices([]);
+                    setSearchSuccessful(true);
+                    setSearchedDeviceName(deviceNameToUse);
+                    setSearchClicked(true); 
+                    props.onEditComplete();
+                }else {
                     console.error("Expected an array but got:", typeof data);
                     setDevices([]);
                     setSearchSuccessful(false);
@@ -369,6 +375,7 @@ return (
   searchedDeviceName={searchedDeviceName}
   signedInUser={signedInUser}
   exchangeToken={exchangeToken}
+  searchSuccessful={searchSuccessful}
 />}
   </div>
 );
