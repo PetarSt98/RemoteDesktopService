@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faLock, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 type DeviceListProps = {
@@ -15,6 +16,7 @@ type DeviceListProps = {
 
 const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searchedDeviceName, signedInUser, exchangeToken, searchSuccessful }) => {
   const [deviceLockStatus, setDeviceLockStatus] = useState<{ [deviceName: string]: boolean }>({});
+  const [loading, setLoading] = useState<{ [deviceName: string]: boolean }>({});
 
   useEffect(() => {
     // Fetch initial lock statuses
@@ -37,6 +39,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
   }, [devices, searchedDeviceName, signedInUser, exchangeToken]);
 
   const handleAccess = (device: string) => {
+    setLoading(prev => ({ ...prev, [device]: true }));
     const currentStatus = deviceLockStatus[device];
     fetch('https://rdgateway-backend.app.cern.ch/api/search_tabel/access', {
       method: 'POST',
@@ -55,9 +58,11 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
     })
     .then(() => {
       setDeviceLockStatus(prevStatus => ({ ...prevStatus, [device]: !currentStatus }));
+      setLoading(prev => ({ ...prev, [device]: false }));
     })
     .catch(error => {
       console.error('Error toggling device access:', error);
+      setLoading(prev => ({ ...prev, [device]: false }));
       Swal.fire({
         icon: 'error',
         title: 'Access toggling has failed!',
@@ -92,13 +97,18 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
             <td>{device}</td>
             <td style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
-  variant={!deviceLockStatus[device] ? "outline-secondary" : "outline-primary"}
-  onClick={() => handleAccess(device)}
-  className="btn-sm mr-2"
-  title="Configure device access"
->
-  <FontAwesomeIcon icon={!deviceLockStatus[device] ? faLock : faUnlockAlt} />
-</Button>
+                variant={!deviceLockStatus[device] ? "outline-secondary" : "outline-primary"}
+                onClick={() => handleAccess(device)}
+                className="btn-sm mr-2"
+                title="Configure device access"
+                disabled={loading[device]}
+              >
+                {loading[device] ? (
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                ) : (
+                  <FontAwesomeIcon icon={!deviceLockStatus[device] ? faLock : faUnlockAlt} />
+                )}
+              </Button>
               <Button
                 variant="outline-danger"
                 onClick={() => handleDelete(device)}
