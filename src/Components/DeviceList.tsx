@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faLock, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 type DeviceListProps = {
   devices: string[];
@@ -35,7 +36,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
     .catch(error => console.error('Error fetching initial lock statuses:', error));
   }, [devices, searchedDeviceName, signedInUser, exchangeToken]);
 
-  const handleAccess = (device:string) => {
+  const handleAccess = (device: string) => {
     const currentStatus = deviceLockStatus[device];
     fetch('https://rdgateway-backend-test.app.cern.ch/api/search_tabel/access', {
       method: 'POST',
@@ -43,14 +44,27 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
       body: JSON.stringify({ signedInUser: signedInUser, searchedDeviceName: searchedDeviceName, user: device, lockStatus: !currentStatus }),
     })
     .then(response => {
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error(`You are not an owner or a main user of the device: ${searchedDeviceName}, you cannot edit users!`);
+        } else {
+          throw new Error('Internal error');
+        }
+      }
       return response.json();
     })
     .then(() => {
       setDeviceLockStatus(prevStatus => ({ ...prevStatus, [device]: !currentStatus }));
     })
-    .catch(error => console.error('Error toggling device access:', error));
-  };
+    .catch(error => {
+      console.error('Error toggling device access:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Access toggling has failed!',
+        text: error.message,
+      });
+    });
+};
 
   if (!devices.length) {
     if (searchSuccessful)

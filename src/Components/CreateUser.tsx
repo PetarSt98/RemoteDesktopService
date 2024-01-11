@@ -51,7 +51,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName, editUser}) => 
         setMessage('An error occurred while creating the device');
     } finally {
         setIsLoading(false);
-        setDeviceName('');
+        setDeviceName(deviceName);
     }
   };
 
