@@ -58,15 +58,19 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   }
   
   return (
-    <div className="container py-3 mt-3" style={{ background: '#f5f8fa' }}>
-      <div className="d-flex justify-content-center align-items-center mb-3">
-        <h1 className="title" style={{position: 'absolute', marginTop: '0', marginBottom: '0'}}>Manage Remote Desktop access to your devices from outside CERN</h1>
-        <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-        <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
-          <Button variant="secondary">Help</Button>
-        </OverlayTrigger>
-        </div>
+    <div className="App">
+      <div className="headerImage">
+        <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
+      <div className="container py-3 mt-3" style={{ background: '#f5f8fa' }}>
+        <div className="d-flex justify-content-center align-items-center mb-3">
+          <h1 className="title" style={{ position: 'absolute', marginTop: '0', marginBottom: '0' }}>Manage Remote Desktop access to your devices from outside CERN</h1>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+            <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
+              <Button variant="secondary">Help</Button>
+            </OverlayTrigger>
+          </div>
+        </div>
       <div className="row">
         <div className="col-md-6">
           <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
@@ -78,6 +82,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
 
         </div>
       </div>
+    </div>
     </div>
   );
 }

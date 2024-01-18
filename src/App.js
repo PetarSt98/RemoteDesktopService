@@ -1,37 +1,73 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {
+
+import { 
   keycloakAuthenticated,
   keycloakUserToken,
   keycloakInstance,
 } from "./selectors";
+
 import AuthRibbon from './Components/AuthRibbon';
 import UserManagement from './Components/UserManagement';
-import Footer from './Components/Footer'; // import the Footer component
-import './design/bg.jpg'; // import the image
+import Footer from './Components/Footer';
+import HomePage from './HomePage';
+import LogMeOff from './Components/LogMeOff';
+import LogUserOff from './Components/LogUserOff';
 
 const App = ({ authenticated, userToken, kcInstance }) => {
   const [accountType, setAccountType] = useState(null);
+
   return (
-    <div className="App">
-      <AuthRibbon authenticated={authenticated} userToken={userToken} kcInstance={kcInstance} onAccountTypeChange={(type) => setAccountType(type)} />
-      <div className="headerImage"> {/* A div for the background image */}
-        <h1 className="headerTitle">CERN Remote Desktop Service</h1> {/* The title text */}
-      </div>
-      {userToken.preferred_username && (
-        <UserManagement token={kcInstance.token} userName={userToken.preferred_username} primaryAccount={accountType} />
-      )}
-      <Footer /> {/* Place the Footer component here */}
-    </div>
+    <Router>
+      <AuthRibbon 
+        authenticated={authenticated} 
+        userToken={userToken} 
+        kcInstance={kcInstance} 
+        onAccountTypeChange={setAccountType}
+      />
+      <Routes>
+        <Route path="/" element={
+          <HomePage 
+            authenticated={authenticated} 
+            userToken={userToken} 
+            kcInstance={kcInstance}
+          />
+        } />
+        <Route path="/user-management" element={
+          <UserManagement 
+            token={kcInstance.token} 
+            userName={userToken.preferred_username} 
+            primaryAccount={accountType}
+          />
+        } />
+        <Route path="/log-me-off" element={
+          <LogMeOff 
+          token={kcInstance.token} 
+          userName={userToken.preferred_username} 
+          primaryAccount={accountType}
+          />
+        } />
+        <Route path="/log-user-off" element={
+          <LogUserOff 
+          token={kcInstance.token} 
+          userName={userToken.preferred_username} 
+          primaryAccount={accountType}
+          />
+        } />
+      </Routes>
+      <Footer />
+    </Router>
   );
-}
+};
 
 App.propTypes = {
   authenticated: PropTypes.bool,
   userToken: PropTypes.object,
+  kcInstance: PropTypes.object
 };
 
 export default connect((state) => ({
