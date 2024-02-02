@@ -141,3 +141,35 @@
   width: 10px;
   border-radius: 50%;
 }
+/* .headerImage {
+  background: linear-gradient(45deg, #6db3f2, #1e38bf);
+  color: #fff;
+} */
+
+.headerTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hover-effect:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+  background-color: #1e38bf;
+  border-color: #1e38bf;
+}
+
+.btn-primary:hover {
+  background-color: #163291;
+  border-color: #163291;
+}

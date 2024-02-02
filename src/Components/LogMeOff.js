@@ -7,14 +7,28 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-    fetch(`https://terminalservicesws.web.cern.ch/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fetchOnlyPublicCluster=true`)
-      .then(response => response.json())
-      .then(data => setDevices(data))
-      .catch(error => console.error('Error fetching devices:', error));
-  }, [userName]);
+    const headers = new Headers();
+    headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
+
+    fetch(`https://terminalservicesws.web.cern.ch/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, { 
+      method: 'GET', // Specify the method
+      headers: headers 
+    })
+    .then(response => {
+      if(response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(data => setDevices(data))
+    .catch(error => console.error('Error fetching devices:', error));
+  }, [userName]); 
 
   const handleLogOff = (serverName) => {
-    fetch(`https://terminalservicesws.web.cern.ch/TerminalServicesWS/TerminalServicesAdminWS.asmx/logMeOff?userLogin=${userName}&serverName=${serverName}`)
+    const headers = new Headers();
+    headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
+
+    fetch(`https://terminalservicesws.web.cern.ch/TerminalServicesWS/TerminalServicesAdminWS.asmx/logMeOff?userLogin=${userName}&serverName=${serverName}`, { method: 'GET', headers: headers })
       .then(response => {
         if (response.ok) {
           // Update the devices list or give feedback to the user
