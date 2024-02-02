@@ -6,23 +6,60 @@ import '../App.css';
 const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [devices, setDevices] = useState([]);
 
+  // useEffect(() => {
+  //   const headers = new Headers();
+  //   headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
+
+  //   fetch(`/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, { 
+  //     method: 'GET',
+  //     headers: headers 
+  //   })
+  //   .then(response => {
+  //     if(response.ok) {
+  //       console.log(response);
+  //       console.log(response.json())
+  //       return response.json();
+  //     }
+  //     throw new Error('Network response was not ok.');
+  //   })
+  //   .then(data => {
+  //     console.log(data);
+  //     setDevices(data);
+  //   })
+  //   .catch(error => {
+  //     console.error('Error fetching devices:', error)
+  //   });
+  // }, [userName]); 
   useEffect(() => {
     const headers = new Headers();
     headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
-
-    fetch(`https://terminalservicesws.web.cern.ch/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, { 
-      method: 'GET', // Specify the method
+  
+    fetch(`/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, {
+      method: 'GET',
       headers: headers 
     })
     .then(response => {
       if(response.ok) {
-        return response.json();
+        return response.text(); // Ensure this is the only time you read the response body
       }
       throw new Error('Network response was not ok.');
     })
-    .then(data => setDevices(data))
-    .catch(error => console.error('Error fetching devices:', error));
-  }, [userName]); 
+    .then(str => {
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(str, "application/xml");
+      console.log(str);
+      console.log(xml);
+      const clusterNames = Array.from(xml.getElementsByTagName("ClusterName")).map(node => node.textContent);
+      // Assuming you want to set devices to an array of cluster names
+      const devices = clusterNames.map(name => ({ name: name }));
+      setDevices(devices); 
+    })
+    .catch(error => {
+      console.error('Error fetching devices:', error);
+    });
+  }, [userName]);
+  
+
 
   const handleLogOff = (serverName) => {
     const headers = new Headers();
