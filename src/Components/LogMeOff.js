@@ -2,62 +2,32 @@ import React, { useState, useEffect } from 'react';
 import AuthRibbon from './AuthRibbon';
 import Footer from './Footer';
 import '../App.css';
+import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
+
 
 const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [devices, setDevices] = useState([]);
-
-  // useEffect(() => {
-  //   const headers = new Headers();
-  //   headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
-
-  //   fetch(`/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, { 
-  //     method: 'GET',
-  //     headers: headers 
-  //   })
-  //   .then(response => {
-  //     if(response.ok) {
-  //       console.log(response);
-  //       console.log(response.json())
-  //       return response.json();
-  //     }
-  //     throw new Error('Network response was not ok.');
-  //   })
-  //   .then(data => {
-  //     console.log(data);
-  //     setDevices(data);
-  //   })
-  //   .catch(error => {
-  //     console.error('Error fetching devices:', error)
-  //   });
-  // }, [userName]); 
+  const [exchangeToken, setExchangeToken] = useState("");
+  useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic ' + btoa("svctsadm:Kan1b0l@CERN2010"));
-  
-    fetch(`/TerminalServicesWS/TerminalServicesAdminWS.asmx/getTSTableWithLoginInfoForUser?username=${userName}&fecthOnlyPublicCluster=true`, {
-      method: 'GET',
-      headers: headers 
-    })
-    .then(response => {
-      if(response.ok) {
-        return response.text(); // Ensure this is the only time you read the response body
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(str => {
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(str, "application/xml");
-      console.log(str);
-      console.log(xml);
-      const clusterNames = Array.from(xml.getElementsByTagName("ClusterName")).map(node => node.textContent);
-      // Assuming you want to set devices to an array of cluster names
-      const devices = clusterNames.map(name => ({ name: name }));
-      setDevices(devices); 
-    })
-    .catch(error => {
-      console.error('Error fetching devices:', error);
-    });
-  }, [userName]);
+    if (exchangeToken.length > 0) {
+      fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/fetch?username=${userName}&fetchOnlyPublicCluster=true`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + exchangeToken
+        }
+      })
+      .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
+      .then(data => {
+        // Assuming the backend returns an array of objects with 'name' and 'serverName' properties
+        setDevices(data.map(device => ({
+          name: device.ClusterName,
+          serverName: device.serverName // Adjust based on actual property names returned by the backend
+        })));
+      })
+      .catch(error => console.error('Error fetching devices:', error));
+    }
+  }, [userName, exchangeToken]);
   
 
 
