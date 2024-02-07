@@ -9,26 +9,45 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [devices, setDevices] = useState([]);
   const [exchangeToken, setExchangeToken] = useState("");
   useTokenExchangeHandler(token, setExchangeToken);
+  
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/fetch?username=${userName}&fetchOnlyPublicCluster=false`, {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/trigger?username=${userName}&fetchOnlyPublicCluster=false`, {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + exchangeToken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Session data generation process started.");
+                // After 2 minutes, fetch the result
+                setTimeout(fetchResult, 180000); // 2 minutes in milliseconds
+            } else {
+                throw new Error('Failed to start session data generation process');
+            }
+        })
+        .catch(error => console.error('Error starting session data generation process:', error));
+    }
+}, [userName, exchangeToken]);
+
+const fetchResult = () => {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result`, {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + exchangeToken
+            Authorization: "Bearer " + exchangeToken
         }
-      })
-      .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
-      .then(data => {
-        // Assuming the backend returns an array of objects with 'name' and 'serverName' properties
-        setDevices(data.map(device => ({
-          name: device.ClusterName,
-          serverName: device.serverName // Adjust based on actual property names returned by the backend
-        })));
-      })
-      .catch(error => console.error('Error fetching devices:', error));
-    }
-  }, [userName, exchangeToken]);
-  
+    })
+    .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
+    .then(data => {
+      // Assuming the backend returns an array of objects with 'name' and 'serverName' properties
+      setDevices(data.map(device => ({
+        name: device.ClusterName,
+        serverName: device.serverName // Adjust based on actual property names returned by the backend
+      })));
+    })
+    .catch(error => console.error('Error fetching devices:', error));
+};
 
 
   const handleLogOff = (serverName) => {
