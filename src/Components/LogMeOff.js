@@ -11,7 +11,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/fetch?username=${userName}&fetchOnlyPublicCluster=true`, {
+      fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/fetch?username=${userName}&fetchOnlyPublicCluster=false`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
