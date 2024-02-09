@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AuthRibbon from './AuthRibbon';
+import Swal from 'sweetalert2';
 import Footer from './Footer';
 import '../App.css';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
+
 
 const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [devices, setDevices] = useState([]);
@@ -13,6 +15,11 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [percentage, setPercentage] = useState(0);
   const [fetchOnlyPublicCluster, setFetchOnlyPublicCluster] = useState("true");
   const [waitTime, setWaitTime] = useState(30000); // Default to 30 seconds
+  const [logOffTrigger, setLogOffTrigger] = useState(0);
+  const [searchText, setSearchText] = useState(''); // State for search text
+  const [searchMachineNames, setSearchMachineNames] = useState(false);
+  const [loggingOffDevice, setLoggingOffDevice] = useState(null);
+
 
   useTokenExchangeHandler(token, setExchangeToken);
 
@@ -55,16 +62,22 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
         setPercentage(0);
       });
     }
-  }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime]);
+  }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime, logOffTrigger]);
 
   const fetchResult = () => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
-        method: "GET",
-        headers: {
-            Authorization: "Bearer " + exchangeToken
-        }
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + exchangeToken
+      }
     })
-    .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch'))
+    .then(response => {
+      if (!response.ok) {
+        // Handle non-OK responses from the server
+        throw new Error('Failed to fetch');
+      }
+      return response.json();
+    })
     .then(data => {
       // Filter out devices that are not connected
       const filteredDevices = data.filter(device => device.IsConnected === "True").map(device => ({
@@ -78,7 +91,26 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
     .catch(error => {
       console.error('Error fetching devices:', error);
       setLoading(false);
+      // Use SweetAlert2 to show the error message
+      Swal.fire({
+        icon: 'error',
+        title: 'Server is busy',
+        text: 'Please refresh the page.',
+        confirmButtonText: 'Refresh',
+        preConfirm: () => {
+          window.location.reload(); // Refresh the page when the user clicks "Refresh"
+        }
+      });
     });
+  };
+  
+
+  const handleSearchChange = (event) => {
+    setSearchText(event.target.value);
+  };
+
+  const handleSearchToggle = (event) => {
+    setSearchMachineNames(event.target.checked);
   };
 
   const handleToggle = (event) => {
@@ -86,56 +118,121 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
     setWaitTime(event.target.checked ? 240000 : 30000);
   };
 
-  const handleLogOff = (serverName) => {
-    // Handling log off without affecting loading state, assuming it's a quick action
-    // Add loading state manipulation here if necessary
+  const handleLogOff = (userName, machineName) => {
+    setLoggingOffDevice(machineName);
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/log-off?username=${userName}&servername=${machineName}`, {
+      method: "DELETE", // Use DELETE method for log-off operation
+      headers: {
+        Authorization: `Bearer ${exchangeToken}`, // Use the exchange token for authorization
+        'Content-Type': 'application/json', // Specify the content type
+      },
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("Log-off successful for:", machineName);
+        setLogOffTrigger(prev => prev + 1);
+      } else {
+        throw new Error('Failed to log off');
+      }
+    })
+    .catch(error => {
+      console.error('Error during log-off:', error);
+    })
+    .finally(() => {
+      setLoggingOffDevice(null); // Reset the logging off state
+    });
   };
 
+  const filteredDevices = devices.filter(device => {
+    const text = searchText.toLowerCase();
+    if (searchMachineNames) {
+      return device.machineName.toLowerCase().includes(text);
+    } else {
+      return device.name.toLowerCase().includes(text);
+    }
+  });
+  
   return (
     <div className="App">
       <div className="headerImage">
         <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
       <div className="container mt-4">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <label>{fetchOnlyPublicCluster === "true" ? 'Fetch Only Public Cluster: ON' : 'Fetch Only Public Cluster: OFF'}</label>
-          <Switch checked={fetchOnlyPublicCluster === "false"} onChange={handleToggle} color="primary" />
+        <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
+          {/* Modernized search bar with dynamic placeholder */}
+          <div style={{ flex: 1, marginRight: '10px', display: 'flex', alignItems: 'center', background: '#f0f0f0', borderRadius: '20px', padding: '5px 15px' }}>
+            <i className="fas fa-search" style={{ marginRight: '10px' }}></i> {/* Font Awesome search icon */}
+            <input
+              type="text"
+              placeholder={searchMachineNames ? "Search machine names" : "Search cluster names"}
+              value={searchText}
+              onChange={handleSearchChange}
+              style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }} // Remove default input styling
+            />
+          </div>
+          <div style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
+            {/* <label>
+              Search Machine Names
+            </label> */}
+            <label>{searchMachineNames ? "Search machine names" : "Search cluster names"}</label>
+            <Switch
+              checked={searchMachineNames}
+              onChange={handleSearchToggle}
+              color="primary"
+              title="Switch to search by clusters names or by machine names"
+            />
+          </div>
+          <div>
+            <label>{fetchOnlyPublicCluster === "true" ? 'Fetch Only Public Cluster: ON' : 'Fetch Only Public Cluster: OFF'}</label>
+            <Switch checked={fetchOnlyPublicCluster === "false"} onChange={handleToggle} color="primary" title="Switch to list public clusters or to list all clusters"/>
+          </div>
         </div>
         {loading ? (
           <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100vh' }}>
-            <div>Please wait...</div>
+            <CircularProgress color="secondary" />
+            <div style={{ marginTop: '20px' }}>Loading...</div>
             <div style={{ marginTop: '20px' }}>{Math.round(percentage)}%</div>
           </div>
         ) : (
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Device</th>
-                  <th>Machine Name</th> {/* Add this header */}
-                  <th>Action</th>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Device</th>
+                <th>Machine Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredDevices.map((device, index) => (
+                <tr key={index}>
+                  <td>{device.name}</td>
+                  <td>{device.machineName}</td>
+                  <td>
+                    <button 
+                      className="btn btn-outline-primary" 
+                      disabled={loggingOffDevice === device.machineName}
+                      onClick={() => handleLogOff(userName, device.machineName)}
+                      style={{ position: 'relative' }}
+                    >
+ {loggingOffDevice === device.machineName ? (
+          <>
+            <CircularProgress size={24} style={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px', color: 'grey' }} />
+            <span style={{ visibility: 'hidden' }}>Log Off</span> {/* Hide text to keep button size */}
+          </>
+        ) : (
+          "Log Off"
+        )}
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {devices.map((device, index) => (
-                  <tr key={index}>
-                    <td>{device.name}</td>
-                    <td>{device.machineName}</td> {/* Display the MachineName */}
-                    <td>
-                      <button 
-                        className="btn btn-outline-primary" 
-                        onClick={() => handleLogOff(device.serverName)}
-                      >
-                        Log Off
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
       <Footer />
     </div>
   );
+  
 };
 export default LogMeOff;
