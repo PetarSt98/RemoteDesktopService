@@ -24,46 +24,60 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   useTokenExchangeHandler(token, setExchangeToken);
 
   useEffect(() => {
-    if (exchangeToken.length > 0) {
-      setLoading(true);
-      setPercentage(0);
-      const startTime = Date.now();
+    let abortController = new AbortController(); // Create a new instance of AbortController
+    const signal = abortController.signal; // Get the signal to pass to fetch calls
 
-      const updatePercentage = () => {
-        const elapsedTime = Date.now() - startTime;
-        const percentage = Math.min(100, (elapsedTime / waitTime) * 100);
-        setPercentage(percentage);
-        if (percentage < 100) {
-          requestAnimationFrame(updatePercentage);
-        }
-      };
-
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/trigger?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
-          method: "GET",
-          headers: {
-              Authorization: "Bearer " + exchangeToken
-          }
-      })
-      .then(response => {
-          if (response.ok) {
-              console.log("Session data generation process started.");
-              setTimeout(() => {
-                fetchResult();
-                setLoading(false);
-              }, waitTime);
-              requestAnimationFrame(updatePercentage);
-          } else {
-              throw new Error('Failed to start session data generation process');
-          }
-      })
-      .catch(error => {
-        console.error('Error starting session data generation process:', error);
-        setLoading(false);
+    const fetchData = async () => {
+      if (exchangeToken.length > 0) {
+        setLoading(true);
         setPercentage(0);
-      });
-    }
-  }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime, logOffTrigger]);
+        const startTime = Date.now();
 
+        const updatePercentage = () => {
+          const elapsedTime = Date.now() - startTime;
+          const percentage = Math.min(100, (elapsedTime / waitTime) * 100);
+          setPercentage(percentage);
+          if (percentage < 100) {
+            requestAnimationFrame(updatePercentage);
+          }
+        };
+
+        try {
+          const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/trigger?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + exchangeToken
+            },
+            signal: signal // Pass the signal to the fetch call
+          });
+
+          if (!response.ok) throw new Error('Failed to start session data generation process');
+
+          console.log("Session data generation process started.");
+          setTimeout(async () => {
+            if (!abortController.signal.aborted) { // Check if the request has been aborted
+              await fetchResult();
+              setLoading(false);
+            }
+          }, waitTime);
+
+          requestAnimationFrame(updatePercentage);
+        } catch (error) {
+          if (error.name !== 'AbortError') { // Ignore abort errors
+            console.error('Error starting session data generation process:', error);
+            setLoading(false);
+            setPercentage(0);
+          }
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      abortController.abort(); // Abort any ongoing fetches when the component unmounts or the effect re-runs
+    };
+  }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime, logOffTrigger]);
   const fetchResult = () => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
       method: "GET",
@@ -115,7 +129,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
 
   const handleToggle = (event) => {
     setFetchOnlyPublicCluster(event.target.checked ? "false" : "true");
-    setWaitTime(event.target.checked ? 240000 : 30000);
+    setWaitTime(event.target.checked ? 150000 : 30000);
   };
 
   const handleLogOff = (userName, machineName) => {
