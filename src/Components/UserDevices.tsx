@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
 import { Button, Modal, Collapse  } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faCog , faCheck, faTimes, faEdit, faQuestion  } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faCog , faCheck, faTimes, faEdit, faQuestion, faSync  } from '@fortawesome/free-solid-svg-icons';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FiSearch, FiX } from 'react-icons/fi';
 
@@ -24,9 +24,10 @@ interface DeviceItemProps {
   handleDelete: () => void;
   handleConfirmation: () => void;
   handleEdit: () => void;
+  handleResetSync: () => void;
 }
 
-const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, dateAdd, dateUpdate, handleDelete, handleConfirmation, handleEdit }) => {
+const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, dateAdd, dateUpdate, handleDelete, handleConfirmation, handleEdit, handleResetSync }) => {
   const confirmDelete = () => {
     Swal.fire({
       title: 'Disable Remote Desktop access from outside CERN',
@@ -65,6 +66,11 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
     handleConfirmation();
   };
 
+  const callResetSync = () =>
+  {
+    handleResetSync();
+  };
+
   return (
     <li className="d-flex justify-content-between align-items-center">
     <span className="d-flex align-items-center">
@@ -101,6 +107,9 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
           <FontAwesomeIcon icon={faEdit} /> 
         </Button>
         <DownloadRdp computerName={device} />
+        <Button variant="outline-primary" size="sm" className="ml-3 button-hover-effect" onClick={callResetSync} title="Restart the synchronization for this device" style={{ marginLeft: '4px', borderColor: 'orange', color: 'orange' }}>
+          <FontAwesomeIcon icon={faSync} className="fa-icon" /> 
+        </Button>
         <button onClick={confirmDelete} className="btn btn-outline-danger btn-sm ml-3" title="Remove device from user" style={{ marginLeft: '4px' }}>
           <FontAwesomeIcon icon={faTrashAlt} /> 
         </button>
@@ -288,6 +297,50 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     });
   };
 
+  const resetSync = (device: string) => {
+    Swal.fire({
+      title: 'Restart Synchronization',
+      text: 'Do you want to restart the synchronization for this device?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/restart?userName=${userName}&deviceName=${device}`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + exchangeToken
+          }
+        })
+        .then(response => response.text())
+        .then(data => {
+          if (data === "Successful sync restart!") {
+            Swal.fire({
+              text: "Synchronization restart initiated. Synchronization will take around 25 minutes.",
+              icon: 'success'
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({
+              text: data,
+              icon: 'error'
+            });
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Swal.fire({
+            text: "Failed to restart the synchronization.",
+            icon: 'error'
+          });
+        });
+      }
+    });
+  };
+
   const deleteDevice = (device: string) => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}&signedInUser=${userName}&primaryUser=${userName}&addDeviceOrUser=device`, {
       method: "DELETE",
@@ -415,6 +468,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
                     handleDelete={() => deleteDevice(device)}
                     handleConfirmation={() => confirmRequest(device)}
                     handleEdit={() => editUser(device)}
+                    handleResetSync={() => resetSync(device)}
                     status={deviceStatus[device]}
                     statusUncompleted={deviceUncompleteStatus[device]}
                     dateAdd={deviceAddDates[device]}
