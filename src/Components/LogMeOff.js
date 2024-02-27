@@ -16,8 +16,8 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [fetchOnlyPublicCluster, setFetchOnlyPublicCluster] = useState("true");
   const [waitTime, setWaitTime] = useState(30000); // Default to 30 seconds
   const [logOffTrigger, setLogOffTrigger] = useState(0);
-  const [searchText, setSearchText] = useState(''); // State for search text
-  const [searchMachineNames, setSearchMachineNames] = useState(false);
+  const [clusterSearchText, setClusterSearchText] = useState(''); // State for cluster search text
+  const [machineSearchText, setMachineSearchText] = useState('');
   const [loggingOffDevice, setLoggingOffDevice] = useState(null);
 
 
@@ -78,6 +78,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       abortController.abort(); // Abort any ongoing fetches when the component unmounts or the effect re-runs
     };
   }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime, logOffTrigger]);
+  
   const fetchResult = () => {
     fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
       method: "GET",
@@ -119,13 +120,14 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   };
   
 
-  const handleSearchChange = (event) => {
-    setSearchText(event.target.value);
+  const handleClusterSearchChange = (event) => {
+    setClusterSearchText(event.target.value);
   };
 
-  const handleSearchToggle = (event) => {
-    setSearchMachineNames(event.target.checked);
+  const handleMachineSearchChange = (event) => {
+    setMachineSearchText(event.target.value);
   };
+
 
   const handleToggle = (event) => {
     setFetchOnlyPublicCluster(event.target.checked ? "false" : "true");
@@ -158,12 +160,14 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   };
 
   const filteredDevices = devices.filter(device => {
-    const text = searchText.toLowerCase();
-    if (searchMachineNames) {
-      return device.machineName.toLowerCase().includes(text);
-    } else {
-      return device.name.toLowerCase().includes(text);
+    if (clusterSearchText && machineSearchText) {
+      return device.name.toLowerCase().includes(clusterSearchText.toLowerCase()) && device.machineName.toLowerCase().includes(machineSearchText.toLowerCase());
+    } else if (clusterSearchText) {
+      return device.name.toLowerCase().includes(clusterSearchText.toLowerCase());
+    } else if (machineSearchText) {
+      return device.machineName.toLowerCase().includes(machineSearchText.toLowerCase());
     }
+    return true;
   });
   
   return (
@@ -172,28 +176,27 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
         <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
       <div className="container mt-4">
-        <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
-          {/* Modernized search bar with dynamic placeholder */}
-          <div style={{ flex: 1, marginRight: '10px', display: 'flex', alignItems: 'center', background: '#f0f0f0', borderRadius: '20px', padding: '5px 15px' }}>
-            <i className="fas fa-search" style={{ marginRight: '10px' }}></i> {/* Font Awesome search icon */}
+      <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
+          {/* Cluster Name Search Bar */}
+          <div style={{ flex: 1, marginRight: '10px', display: 'flex', alignItems: 'center', background: '#f0f0f0', borderRadius: '20px', padding: '5px 15px', maxWidth: '400px' }}>
+            <i className="fas fa-search" style={{ marginRight: '10px' }}></i>
             <input
               type="text"
-              placeholder={searchMachineNames ? "Search machine names" : "Search cluster names"}
-              value={searchText}
-              onChange={handleSearchChange}
-              style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }} // Remove default input styling
+              placeholder="Search cluster names"
+              value={clusterSearchText}
+              onChange={handleClusterSearchChange}
+              style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
-          <div style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-            {/* <label>
-              Search Machine Names
-            </label> */}
-            <label>{searchMachineNames ? "Search machine names" : "Search cluster names"}</label>
-            <Switch
-              checked={searchMachineNames}
-              onChange={handleSearchToggle}
-              color="primary"
-              title="Switch to search by clusters names or by machine names"
+          {/* Machine Name Search Bar */}
+          <div style={{ flex: 1, marginRight: '20px', display: 'flex', alignItems: 'center', background: '#f0f0f0', borderRadius: '20px', padding: '5px 15px', maxWidth: '400px' }}>
+            <i className="fas fa-search" style={{ marginRight: '10px' }}></i>
+            <input
+              type="text"
+              placeholder="Search machine names"
+              value={machineSearchText}
+              onChange={handleMachineSearchChange}
+              style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
           <div>
@@ -204,14 +207,19 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
         {loading ? (
           <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100vh' }}>
             <CircularProgress color="secondary" />
-            <div style={{ marginTop: '20px' }}>Loading...</div>
+            <div style={{ marginTop: '20px' }}>
+            {fetchOnlyPublicCluster === "true" ? 
+        "Please wait, loading may take up to 30 seconds." : 
+        "Fetching all clusters. Please wait, this may take up to 3 minutes."
+      }
+    </div>
             <div style={{ marginTop: '20px' }}>{Math.round(percentage)}%</div>
           </div>
         ) : (
           <table className="table table-striped">
             <thead>
               <tr>
-                <th>Device</th>
+                <th>Cluster Name</th>
                 <th>Machine Name</th>
                 <th>Action</th>
               </tr>
