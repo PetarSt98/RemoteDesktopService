@@ -6,6 +6,7 @@ import '../App.css';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
+import { Typography, FormControlLabel, Box } from '@material-ui/core';
 
 
 const LogMeOff = ({ token, userName, primaryAccount }) => {
@@ -199,9 +200,39 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
               style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
-          <div>
-            <label>{fetchOnlyPublicCluster === "true" ? 'Fetch Only Public Cluster: ON' : 'Fetch Only Public Cluster: OFF'}</label>
-            <Switch checked={fetchOnlyPublicCluster === "false"} onChange={handleToggle} color="primary" title="Switch to list public clusters or to list all clusters"/>
+          {/* <Box style={{ margin: '20px 0' }}>
+  <Typography variant="body1" style={{ marginBottom: '10px', color: '#333' }}>
+    {fetchOnlyPublicCluster === "true" ? 'Currently Viewing: Public Clusters Only' : 'Currently Viewing: All Clusters'}
+  </Typography>
+  <FormControlLabel
+    control={
+      <Switch
+        checked={fetchOnlyPublicCluster === "false"}
+        onChange={handleToggle}
+        name="publicClusterSwitch"
+        color="primary"
+      />
+    }
+    label="Show All Clusters"
+    style={{ margin: '10px 0' }}
+  />
+</Box> */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="body1" style={{ color: '#333' }}>
+              {fetchOnlyPublicCluster === "true" ? 'Current view: Public Clusters Only' : 'Current view: All Clusters'}
+            </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={fetchOnlyPublicCluster === "false"}
+                  onChange={handleToggle}
+                  name="publicClusterSwitch"
+                  color="primary"
+                />
+              }
+              label="Show All Clusters"
+              style={{ marginLeft: '10px' }}
+            />
           </div>
         </div>
         {loading ? (
@@ -214,6 +245,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       }
     </div>
             <div style={{ marginTop: '20px' }}>{Math.round(percentage)}%</div>
+            
           </div>
         ) : (
           <table className="table table-striped">
@@ -251,6 +283,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
             </tbody>
           </table>
         )}
+        
       </div>
       <Footer />
     </div>

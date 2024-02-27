@@ -6,6 +6,7 @@ import '../App.css';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
+import { Typography, FormControlLabel, Box } from '@material-ui/core';
 
 
 const LogUserOff = ({ token, userName, primaryAccount }) => {
@@ -122,6 +123,16 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
       setPercentage(100); // Consider moving this line if needed
     } catch (error) {
       console.error('Error fetching devices:', error);
+      setLoading(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Server is busy',
+        text: 'Please refresh the page.',
+        confirmButtonText: 'Refresh',
+        preConfirm: () => {
+          window.location.reload(); // Refresh the page when the user clicks "Refresh"
+        }
+      });
       // Handle error scenario
     } finally {
       setLoading(false); // Ensure this is always executed
@@ -205,7 +216,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
       }}
     />
     <button type="submit" className="btn" style={{ background: '#4A90E2', color: 'white', borderRadius: '20px', border: 'none', padding: '10px 20px', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}>
-      Confirm
+      Fetch session
     </button>
   </div>
 </form>
@@ -232,9 +243,39 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
               style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
-          <div>
-            <label>{fetchOnlyPublicCluster === "true" ? 'Fetch Only Public Cluster: ON' : 'Fetch Only Public Cluster: OFF'}</label>
-            <Switch checked={fetchOnlyPublicCluster === "false"} onChange={handleToggle} color="primary" title="Switch to list public clusters or to list all clusters"/>
+        {/* <Box style={{ margin: '20px 0' }}>
+          <Typography variant="body1" style={{ marginBottom: '10px', color: '#333' }}>
+            {fetchOnlyPublicCluster === "true" ? 'Currently Viewing: Public Clusters Only' : 'Currently Viewing: All Clusters'}
+          </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={fetchOnlyPublicCluster === "false"}
+                onChange={handleToggle}
+                name="publicClusterSwitch"
+                color="primary"
+              />
+            }
+            label="Show All Clusters"
+            style={{ margin: '10px 0' }}
+          />
+        </Box> */}
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="body1" style={{ color: '#333' }}>
+              {fetchOnlyPublicCluster === "true" ? 'Current view: Public Clusters Only' : 'Current view: All Clusters'}
+            </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={fetchOnlyPublicCluster === "false"}
+                  onChange={handleToggle}
+                  name="publicClusterSwitch"
+                  color="primary"
+                />
+              }
+              label="Show All Clusters"
+              style={{ marginLeft: '10px' }}
+            />
           </div>
         </div>
         {loading ? (

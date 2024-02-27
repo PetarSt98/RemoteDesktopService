@@ -32,9 +32,9 @@ const App = ({ authenticated, userToken, kcInstance }) => {
       <Routes>
         <Route path="/" element={
           <HomePage 
-            authenticated={authenticated} 
-            userToken={userToken} 
-            kcInstance={kcInstance}
+            token={kcInstance.token} 
+            userName={userToken.preferred_username} 
+            primaryAccount={accountType}
           />
         } />
         <Route path="/user-management" element={
