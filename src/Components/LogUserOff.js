@@ -7,6 +7,7 @@ import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
 import { Typography, FormControlLabel, Box } from '@material-ui/core';
+import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
 
 
 const LogUserOff = ({ token, userName, primaryAccount }) => {
@@ -192,12 +193,35 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
     return true;
   });
   
+  const popover = (
+    <Popover id="popover-basic" style={{maxWidth: '600px'}}>
+      <Popover.Header as="h3">Help</Popover.Header>
+      <Popover.Body>
+        This webpage allows you to disconnect other users' sessions.
+        <br/><br/>
+        Enter the username in the input bar to fetch users' sessions and click "Fetch Sessions". After that, please wait around 30 seconds to fetch sessions from public clusters and around 3 minutes to fetch sessions from all clusters. This website allows you to disconnect your sessions.
+        <br/><br/> 
+        To fetch sessions from all clusters, use the "Show All Clusters" switch. It is OFF by default.
+        <br/><br/> 
+        To be able to disconnect other users' sessions, the account CERN\{userName} must be an Admin.
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <div className="App">
       <div className="headerImage">
         <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
       <div className="container mt-4">
+      <div className="d-flex justify-content-center align-items-center mb-3">
+          <h1 className="title" style={{ position: 'absolute', marginTop: '0', marginBottom: '0' }}>Disconnect users' sessions</h1>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: '10px' }}>
+            <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
+              <Button variant="secondary">Help</Button>
+            </OverlayTrigger>
+          </div>
+      </div>
       <form onSubmit={handleUserNameSubmit} style={{ marginBottom: '20px' }}>
   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', background: '#e8f0fe', borderRadius: '25px', padding: '10px 15px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
     <input

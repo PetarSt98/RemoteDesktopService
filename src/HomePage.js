@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Footer from './Components/Footer';
 import './App.css'; // Ensure your CSS file has the new styles
 import { useTokenExchangeHandler } from "./shared/useTokenExchangeHandler";
+import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
+
 
 const HomePage = ({ token, userName, primaryAccount }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -52,14 +54,41 @@ const HomePage = ({ token, userName, primaryAccount }) => {
       </div>
     );
   }
+
+  const popover = (
+    <Popover id="popover-basic" style={{maxWidth: '600px'}}>
+      <Popover.Header as="h3">Help</Popover.Header>
+      <Popover.Body>
+        This website manages the list of users/devices and sessions allowed to connect to devices from outside CERN.
+        <br/><br/>
+        To manage users and devices for remote desktop and download RDP files, use Manage Gateways.
+        <br/><br/> 
+        To dissconnet your sessions, use Log Me Off.
+        <br/><br/> 
+        Admins only: To disconnect other users' sessions, use Log Users Off.
+        <br/><br/> 
+        To be able to use Manage Gateways, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
+        <br/><br/>
+        Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
+        <a href="https://landb.cern.ch/portal" style={{color: 'blue', marginLeft: '4px'}}>https://landb.cern.ch/portal</a>.
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <div className="App">
       <div className="headerImage py-5">
         <h1 className="headerTitle text-center">CERN Remote Desktop Service</h1>
       </div>
       <div className="container my-5">
-        <p className="lead text-center mb-5">Welcome to the CERN Remote Desktop Service. Select an option below to proceed.</p>
-        
+      <div className="d-flex justify-content-center align-items-center mb-3">
+          <h1 className="title" style={{ position: 'absolute', marginTop: '0', marginBottom: '0' }}>Welcome to the CERN Remote Desktop Service</h1>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+            <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
+              <Button variant="secondary">Help</Button>
+            </OverlayTrigger>
+          </div>
+          </div>
         <div className="row">
           {!isAdmin && (
             <>

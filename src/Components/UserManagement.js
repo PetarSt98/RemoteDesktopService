@@ -35,7 +35,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
       <Popover.Header as="h3">Help</Popover.Header>
       <Popover.Body>
-        This website manages the list of users allowed to connect to devices from outside CERN.
+        This webpage manages the list of users allowed to connect to devices from outside CERN.
         <br/><br/>
         To find the instructions for how to use the website, please use the 
         <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual.</a>
@@ -47,7 +47,6 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
         <br/><br/>
         If you would like to learn more or troubleshoot access issues please read: 
         <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{color: 'blue', marginLeft: '4px'}}>Configuring remote connection via Remote Desktop Gateway</a>
-        <br/><br/>
       </Popover.Body>
     </Popover>
   );
