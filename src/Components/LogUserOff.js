@@ -153,7 +153,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
 
   const handleToggle = (event) => {
     setFetchOnlyPublicCluster(event.target.checked ? "false" : "true");
-    setWaitTime(event.target.checked ? 150000 : 30000);
+    setWaitTime(event.target.checked ? 200000 : 30000);
   };
 
   const handleLogOff = (userName, machineName) => {
