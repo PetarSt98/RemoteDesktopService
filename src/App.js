@@ -37,7 +37,7 @@ const App = ({ authenticated, userToken, kcInstance }) => {
             primaryAccount={accountType}
           />
         } />
-        <Route path="/user-management" element={
+        <Route path="/gateway" element={
           <UserManagement 
             token={kcInstance.token} 
             userName={userToken.preferred_username} 

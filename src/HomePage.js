@@ -69,9 +69,9 @@ const HomePage = ({ token, userName, primaryAccount }) => {
               <div className="col-md-4 mb-4">
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">User Management</h5>
+                    <h5 className="card-title">Gateways</h5>
                     <p className="card-text">Manage users and their access privileges for remote desktop services.</p>
-                    <Link to="/user-management" className="mt-auto btn btn-primary">Manage Users</Link>
+                    <Link to="/gateway" className="mt-auto btn btn-primary">Manage gateways</Link>
                   </div>
                 </div>
               </div>
