@@ -4,7 +4,7 @@ import UserSearch, { UserSearchRef } from './UserSearch';
 import CreateUser from './CreateUser';
 import UserDevices from './UserDevices';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
-import { Button, OverlayTrigger, Popover, Modal, Tooltip } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover, Modal, Tooltip, Toast } from 'react-bootstrap';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,6 +17,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   const [selectedDevice, setSelectedDevice] = useState("");
   const [hideSearch, setHideSearch] = useState(hideSearchBar); 
   const [exchangeToken, setExchangeToken] = useState("");
+  const [showToast, setShowToast] = useState(true);
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (exchangeToken.length > 0) {
@@ -34,6 +35,15 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
       .catch(error => console.error('Error fetching the hideSearch data:', error));
     }
   }, [exchangeToken, userName]); 
+
+  useEffect(() => {
+    // Automatically hide the toast after 5 seconds (5000 milliseconds)
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 20000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const popover = (
     <Popover id="popover-basic" style={{maxWidth: '600px'}}>
@@ -74,6 +84,23 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
 
   return (
     <div className="App">
+      <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={5000}
+        autohide
+        style={{
+          position: 'fixed',
+          top: 60,
+          right: 20,
+          zIndex: 1050,
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Welcome to CERN Remote Desktop Gateway</strong>
+        </Toast.Header>
+        <Toast.Body>If you're using this website for the first time, please read the instructions by clicking the help button.</Toast.Body>
+      </Toast>
       <div className="headerImage">
         <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
@@ -88,15 +115,14 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
         onClick={navigateHome}
         style={{
           position: 'absolute',
-          top: 230,
-          left: 205,
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
           borderRadius: '5px',
           padding: '10px 15px',
           cursor: 'pointer',
-          fontSize: '16px'
+          fontSize: '16px',
+          marginRight: '1195px'
         }}
       >
         <FontAwesomeIcon icon={faHome} style={{ marginRight: '8px' }} />

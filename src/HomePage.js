@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import Footer from './Components/Footer';
 import './App.css'; // Ensure your CSS file has the new styles
 import { useTokenExchangeHandler } from "./shared/useTokenExchangeHandler";
-import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover, Modal, Toast } from 'react-bootstrap';
 
 
 const HomePage = ({ token, userName, primaryAccount }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state to indicate the fetching process
   const [exchangeToken, setExchangeToken] = useState("");
+  const [showToast, setShowToast] = useState(true);
   useTokenExchangeHandler(token, setExchangeToken);
 
   useEffect(() => {
@@ -40,6 +41,15 @@ const HomePage = ({ token, userName, primaryAccount }) => {
 
     fetchAdminStatus();
   }, [exchangeToken, userName]); // This effect depends on token and userName
+
+  useEffect(() => {
+    // Automatically hide the toast after 5 seconds (5000 milliseconds)
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 20000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isLoading) {
     return (
@@ -88,6 +98,23 @@ const HomePage = ({ token, userName, primaryAccount }) => {
 
   return (
     <div className="App">
+      <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={5000}
+        autohide
+        style={{
+          position: 'fixed',
+          top: 60,
+          right: 20,
+          zIndex: 1050,
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Welcome to CERN Remote Desktop Service</strong>
+        </Toast.Header>
+        <Toast.Body>If you're using this website for the first time, please read the instructions by clicking the help button on each page.</Toast.Body>
+      </Toast>
       <div className="headerImage py-5">
         <h1 className="headerTitle text-center">CERN Remote Desktop Service</h1>
       </div>

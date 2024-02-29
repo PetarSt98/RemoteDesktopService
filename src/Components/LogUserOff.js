@@ -7,7 +7,7 @@ import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
 import { Typography, FormControlLabel, Box } from '@material-ui/core';
-import { Button, OverlayTrigger, Popover, Modal, Tooltip } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover, Modal, Tooltip, Toast } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +25,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
   const [clusterSearchText, setClusterSearchText] = useState(''); // State for cluster search text
   const [machineSearchText, setMachineSearchText] = useState('');
   const [loggingOffDevice, setLoggingOffDevice] = useState(null);
+  const [showToast, setShowToast] = useState(true);
   const [shouldFetch, setShouldFetch] = useState(false);
 
 
@@ -143,8 +144,14 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
     }
   };
   
-  
-  
+  useEffect(() => {
+    // Automatically hide the toast after 5 seconds (5000 milliseconds)
+    const timer = setTimeout(() => {
+      setShowToast(false);
+    }, 20000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClusterSearchChange = (event) => {
     setClusterSearchText(event.target.value);
@@ -227,6 +234,23 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
   
   return (
     <div className="App">
+                  <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={5000}
+        autohide
+        style={{
+          position: 'fixed',
+          top: 60,
+          right: 20,
+          zIndex: 1050,
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Welcome to CERN Log User Off</strong>
+        </Toast.Header>
+        <Toast.Body>If you're using this website for the first time, please read the instructions by clicking the help button.</Toast.Body>
+      </Toast>
       <div className="headerImage">
         <h1 className="headerTitle">CERN Remote Desktop Service</h1>
       </div>
@@ -241,15 +265,14 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
         onClick={navigateHome}
         style={{
           position: 'absolute',
-          top: 225,
-          left: 205,
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
           borderRadius: '5px',
           padding: '10px 15px',
           cursor: 'pointer',
-          fontSize: '16px'
+          fontSize: '16px',
+          marginRight: '1195px'
         }}
       >
         <FontAwesomeIcon icon={faHome} style={{ marginRight: '8px' }} />
