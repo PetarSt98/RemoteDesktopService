@@ -61,16 +61,27 @@ const HomePage = ({ token, userName, primaryAccount }) => {
       <Popover.Body>
         This website manages the list of users/devices and sessions allowed to connect to devices from outside CERN.
         <br/><br/>
-        To manage users and devices for remote desktop and download RDP files, use Manage Gateways.
+        To enable Remote Desktop Access to your devices from outside CERN and download RDP files, use Remote Desktop Gateway.
         <br/><br/> 
-        To dissconnet your sessions, use Log Me Off.
+        To disconnect your user sessions from Remote Desktop Terminal Services clusters, use Log Me Off.
         <br/><br/> 
-        Admins only: To disconnect other users' sessions, use Log Users Off.
+        For Administrators: To disconnect users from Remote Desktop Terminal Services clusters you manage, use Log Users Off.
         <br/><br/> 
-        To be able to use Manage Gateways, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
+        To be able to use Manage Gateways, the account CERN\{userName} must be a CERN primary account, and it has to fulfill at least one of the following requirements:
         <br/><br/>
-        Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
-        <a href="https://landb.cern.ch/portal" style={{color: 'blue', marginLeft: '4px'}}>https://landb.cern.ch/portal</a>.
+        Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at <a href="https://landb.cern.ch/portal" style={{color: 'blue', marginLeft: '4px'}}>https://landb.cern.ch/portal</a>.
+        <br/><br/>
+        <strong>Service Portal Knowledge Base articles:</strong>
+      <ul>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0006557" style={{ color: 'blue' }}>Connect to the Windows Terminal Servers cluster (cernts)</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004334" style={{ color: 'blue' }}>Configure Remote Desktop to access a Windows PC from outside</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0001255" style={{ color: 'blue' }}>Connecting to a Windows Terminal Service at CERN (On Windows, Mac and Linux)</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{ color: 'blue' }}>How to use the new Remote Desktop Service website</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0008599" style={{ color: 'blue' }}>How to print on Windows Terminal Service (CERNTS)</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0004112" style={{ color: 'blue' }}>Enable Remote Desktop Services role</a></li>
+        <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0008336" style={{ color: 'blue' }}>How to run Oracle Java in cernts</a></li>
+      </ul>
+
       </Popover.Body>
     </Popover>
   );
@@ -98,9 +109,9 @@ const HomePage = ({ token, userName, primaryAccount }) => {
               <div className="col-md-4 mb-4">
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">Gateways</h5>
-                    <p className="card-text">Manage your access for remote desktop gateways.</p>
-                    <Link to="/gateway" className="mt-auto btn btn-primary">Manage Gateways</Link>
+                    <h5 className="card-title">Remote Desktop Gateway</h5>
+                    <p className="card-text">Enable Remote Desktop Access to your devices from outside CERN.</p>
+                    <Link to="/gateway" className="mt-auto btn btn-primary">Remote Desktop Gateway</Link>
                   </div>
                 </div>
               </div>
@@ -110,7 +121,7 @@ const HomePage = ({ token, userName, primaryAccount }) => {
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">Log Me Off</h5>
-                    <p className="card-text">Disconnect your sessions.</p>
+                    <p className="card-text">Disconnect your user sessions from Remote Desktop Terminal Services clusters.</p>
                     <Link to="/log-me-off" className="mt-auto btn btn-primary">Log Me Off</Link>
                   </div>
                 </div>
@@ -125,9 +136,9 @@ const HomePage = ({ token, userName, primaryAccount }) => {
               <div className="col-md-4 mb-4">
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">Gateways</h5>
-                    <p className="card-text">Manage users and their access privileges for remote desktop gateways.</p>
-                    <Link to="/gateway" className="mt-auto btn btn-primary">Manage Gateways</Link>
+                    <h5 className="card-title">Remote Desktop Gateway</h5>
+                    <p className="card-text">Enable Remote Desktop Access to your devices from outside CERN.</p>
+                    <Link to="/gateway" className="mt-auto btn btn-primary">Remote Desktop Gateway</Link>
                   </div>
                 </div>
               </div>
@@ -136,7 +147,7 @@ const HomePage = ({ token, userName, primaryAccount }) => {
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">Log Me Off</h5>
-                    <p className="card-text">Disconnect your sessions.</p>
+                    <p className="card-text">Disconnect your user sessions from Remote Desktop Terminal Services clusters.</p>
                     <Link to="/log-me-off" className="mt-auto btn btn-primary">Log Me Off</Link>
                   </div>
                 </div>
@@ -146,7 +157,7 @@ const HomePage = ({ token, userName, primaryAccount }) => {
                 <div className="card h-100 shadow-sm hover-effect">
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">Log User Off</h5>
-                    <p className="card-text">Disconnect other users' sessions.</p>
+                    <p className="card-text">For Administrators. Disconnect users from Remote Desktop Terminal Services clusters you manage.</p>
                     <Link to="/log-user-off" className="mt-auto btn btn-primary">Log Users Off</Link>
                   </div>
                 </div>

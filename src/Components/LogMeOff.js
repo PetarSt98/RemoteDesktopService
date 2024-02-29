@@ -7,7 +7,10 @@ import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import { CircularProgress } from '@material-ui/core'; // Import a loading component
 import Switch from '@material-ui/core/Switch'; // Import a Switch component for the toggle button
 import { Typography, FormControlLabel, Box } from '@material-ui/core';
-import { Button, OverlayTrigger, Popover, Modal } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover, Modal, Tooltip } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 
 const LogMeOff = ({ token, userName, primaryAccount }) => {
@@ -185,6 +188,20 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
     </Popover>
   );
 
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  // Function to navigate to home
+  const navigateHome = () => {
+    navigate('/'); // Navigate to the home route using navigate function
+  };
+  
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Go to home page
+    </Tooltip>
+  );
+
   return (
     <div className="App">
       <div className="headerImage">
@@ -192,7 +209,31 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       </div>
       <div className="container mt-4">
       <div className="d-flex justify-content-center align-items-center mb-3">
-          <h1 className="title" style={{ position: 'absolute', marginTop: '0', marginBottom: '0' }}>Disconnect your sessions</h1>
+      <OverlayTrigger
+      placement="right"
+      delay={{ show: 250, hide: 400 }}
+      overlay={renderTooltip}
+    >
+      <button
+        onClick={navigateHome}
+        style={{
+          position: 'absolute',
+          top: 230,
+          left: 200,
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          padding: '10px 15px',
+          cursor: 'pointer',
+          fontSize: '16px'
+        }}
+      >
+        <FontAwesomeIcon icon={faHome} style={{ marginRight: '8px' }} />
+        Home
+      </button>
+    </OverlayTrigger>
+          <h1 className="title" style={{ position: 'absolute', marginTop: '0', marginBottom: '0' }}>Disconnect your user sessions from Remote Desktop Terminal Services clusters</h1>
           
       <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: '8px'}}>
             <OverlayTrigger trigger="click" placement="left" overlay={popover} rootClose>
@@ -223,23 +264,6 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
               style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
-          {/* <Box style={{ margin: '20px 0' }}>
-  <Typography variant="body1" style={{ marginBottom: '10px', color: '#333' }}>
-    {fetchOnlyPublicCluster === "true" ? 'Currently Viewing: Public Clusters Only' : 'Currently Viewing: All Clusters'}
-  </Typography>
-  <FormControlLabel
-    control={
-      <Switch
-        checked={fetchOnlyPublicCluster === "false"}
-        onChange={handleToggle}
-        name="publicClusterSwitch"
-        color="primary"
-      />
-    }
-    label="Show All Clusters"
-    style={{ margin: '10px 0' }}
-  />
-</Box> */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="body1" style={{ color: '#333' }}>
               {fetchOnlyPublicCluster === "true" ? 'Current view: Public Clusters Only' : 'Current view: All Clusters'}
@@ -254,6 +278,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
                 />
               }
               label="Show All Clusters"
+              title="Toggle Visibility: Show Public Clusters Only or Display All Clusters"
               style={{ marginLeft: '10px' }}
             />
           </div>
