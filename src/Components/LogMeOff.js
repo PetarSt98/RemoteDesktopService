@@ -26,10 +26,12 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [showToast, setShowToast] = useState(true);
   const [loggingOffDevice, setLoggingOffDevice] = useState(null);
   const [hideSwitch, setHideSwitch] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useTokenExchangeHandler(token, setExchangeToken);
   useEffect(() => {
     if (exchangeToken.length > 0) {
+      setIsLoading(true);
       fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
         method: "GET",
         headers: {
@@ -40,8 +42,12 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       .then(data => {
         // Assuming your controller returns a boolean
         setHideSwitch(!data);  // Update the hideSearch state with the returned value
+        setIsLoading(false); 
       })
       .catch(error => console.error('Error fetching the hideSearch data:', error));
+    }
+    else {
+      setIsLoading(true);
     }
   }, [exchangeToken, userName]); 
 
@@ -228,6 +234,20 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       Go to home page
     </Tooltip>
   );
+
+  if (isLoading) {
+    return (
+      <div className="App">
+        <div className="headerImage py-5">
+          <h1 className="headerTitle text-center">CERN Remote Desktop Service</h1>
+        </div>
+        <div className="container my-5">
+          <p className="lead text-center mb-5">Checking your access privileges...</p>
+          {/* Optionally, you can add a spinner or loading animation here */}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">

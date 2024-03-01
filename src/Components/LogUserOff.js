@@ -30,7 +30,6 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-
   useTokenExchangeHandler(token, setExchangeToken);
 
   useEffect(() => {
@@ -53,8 +52,6 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
           setIsLoading(false); // End loading regardless of the fetch outcome
         }
       } else {
-        // If token or userName are not yet available, keep loading state active
-        // This condition can be adjusted based on how token and userName are expected to be set
         setIsLoading(true);
       }
     };
