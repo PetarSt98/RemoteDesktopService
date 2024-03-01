@@ -77,10 +77,6 @@ const HomePage = ({ token, userName, primaryAccount }) => {
         <br/><br/> 
         For Administrators: To disconnect users from Remote Desktop Terminal Services clusters you manage, use Log Users Off.
         <br/><br/> 
-        To be able to use Manage Gateways, the account CERN\{userName} must be a CERN primary account, and it has to fulfill at least one of the following requirements:
-        <br/><br/>
-        Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at <a href="https://landb.cern.ch/portal" style={{color: 'blue', marginLeft: '4px'}}>https://landb.cern.ch/portal</a>.
-        <br/><br/>
         <strong>Service Portal Knowledge Base articles:</strong>
       <ul>
         <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0006557" style={{ color: 'blue' }}>Connect to the Windows Terminal Servers cluster (cernts)</a></li>
