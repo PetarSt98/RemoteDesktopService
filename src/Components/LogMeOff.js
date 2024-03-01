@@ -145,7 +145,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
 
   const handleToggle = (event) => {
     setFetchOnlyPublicCluster(event.target.checked ? "false" : "true");
-    setWaitTime(event.target.checked ? 200000 : 30000);
+    setWaitTime(event.target.checked ? 250000 : 30000);
   };
 
   const handleLogOff = (userName, machineName) => {
@@ -190,7 +190,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
       <Popover.Body>
         This webpage allows you to disconnect your sessions.
         <br/><br/>
-        When entering the website, please wait around 30 seconds to fetch sessions from public clusters and around 3 minutes to fetch sessions from all clusters.
+        When entering the website, please wait around 30 seconds to fetch sessions from public clusters and around 4 minutes to fetch sessions from all clusters.
         <br/><br/> 
         To fetch sessions from all clusters, use the "Show All Clusters" switch. It is OFF by default.
       </Popover.Body>
@@ -314,7 +314,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
             <div style={{ marginTop: '20px' }}>
             {fetchOnlyPublicCluster === "true" ? 
         "Please wait, loading may take up to 30 seconds." : 
-        "Fetching all clusters. Please wait, this may take up to 3 minutes."
+        "Fetching all clusters. Please wait, this may take up to 4 minutes."
       }
     </div>
             <div style={{ marginTop: '20px' }}>{Math.round(percentage)}%</div>
