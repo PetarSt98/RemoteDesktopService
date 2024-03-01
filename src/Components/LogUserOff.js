@@ -27,9 +27,40 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
   const [loggingOffDevice, setLoggingOffDevice] = useState(null);
   const [showToast, setShowToast] = useState(true);
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   useTokenExchangeHandler(token, setExchangeToken);
+
+  useEffect(() => {
+    // Define the function that will fetch the admin status
+    const fetchAdminStatus = async () => {
+      if (token && userName && exchangeToken.length > 0) { // Ensure both token and userName are defined
+        setIsLoading(true); // Begin loading
+        try {
+          const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + exchangeToken
+            }
+          });
+          const data = await response.json();
+          setIsAdmin(!data); // Assuming the API returns an object with an isAdmin boolean
+        } catch (error) {
+          console.error('Error fetching admin status:', error);
+        } finally {
+          setIsLoading(false); // End loading regardless of the fetch outcome
+        }
+      } else {
+        // If token or userName are not yet available, keep loading state active
+        // This condition can be adjusted based on how token and userName are expected to be set
+        setIsLoading(true);
+      }
+    };
+
+    fetchAdminStatus();
+  }, [exchangeToken, userName]); // This effect depends on token and userName
 
   useEffect(() => {
     
@@ -232,6 +263,34 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
     </Tooltip>
   );
   
+  if (isLoading) {
+    return (
+      <div className="App">
+        <div className="headerImage py-5">
+          <h1 className="headerTitle text-center">CERN Remote Desktop Service</h1>
+        </div>
+        <div className="container my-5">
+          <p className="lead text-center mb-5">Checking your access privileges...</p>
+          {/* Optionally, you can add a spinner or loading animation here */}
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoading && !isAdmin) {
+    return (
+      <div className="App">
+        <div className="headerImage py-5">
+          <h1 className="headerTitle text-center">CERN Remote Desktop Service</h1>
+        </div>
+        <div className="container my-5">
+          <p className="lead text-center mb-5">You are not authorized to access this website!</p>
+          {/* Optionally, you can add a spinner or loading animation here */}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
                   <Toast

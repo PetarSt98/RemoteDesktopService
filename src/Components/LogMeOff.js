@@ -25,7 +25,25 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [machineSearchText, setMachineSearchText] = useState('');
   const [showToast, setShowToast] = useState(true);
   const [loggingOffDevice, setLoggingOffDevice] = useState(null);
+  const [hideSwitch, setHideSwitch] = useState(false);
 
+  useTokenExchangeHandler(token, setExchangeToken);
+  useEffect(() => {
+    if (exchangeToken.length > 0) {
+      fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + exchangeToken
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Assuming your controller returns a boolean
+        setHideSwitch(!data);  // Update the hideSearch state with the returned value
+      })
+      .catch(error => console.error('Error fetching the hideSearch data:', error));
+    }
+  }, [exchangeToken, userName]); 
 
   useTokenExchangeHandler(token, setExchangeToken);
 
@@ -266,7 +284,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
             </OverlayTrigger>
           </div>
           </div>
-      <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
           {/* Cluster Name Search Bar */}
           <div style={{ flex: 1, marginRight: '10px', display: 'flex', alignItems: 'center', background: '#f0f0f0', borderRadius: '20px', padding: '5px 15px', maxWidth: '400px' }}>
             <i className="fas fa-search" style={{ marginRight: '10px' }}></i>
@@ -289,7 +307,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
               style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1 }}
             />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          {hideSwitch && <div style={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="body1" style={{ color: '#333' }}>
               {fetchOnlyPublicCluster === "true" ? 'Current view: Public Clusters Only' : 'Current view: All Clusters'}
             </Typography>
@@ -306,7 +324,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
               title="Toggle Visibility: Show Public Clusters Only or Display All Clusters"
               style={{ marginLeft: '10px' }}
             />
-          </div>
+          </div>}
         </div>
         {loading ? (
           <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100vh' }}>

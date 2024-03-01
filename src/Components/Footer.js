@@ -19,7 +19,7 @@ const Footer = () => {
           href="https://cern.service-now.com/service-portal?id=privacy_policy&se=windows-terminal&notice=wts" 
           className="contact-link"
         >
-          Private Notice
+          Privacy Notice
         </a>
       </p>
     </div>
