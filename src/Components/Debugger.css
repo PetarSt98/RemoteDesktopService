@@ -1,0 +1,47 @@
+.data-layout-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 40px; /* Ensure space above the footer */
+  }
+  
+  .rap-content-container {
+    margin-bottom: 20px;
+  }
+  
+  .main-content-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .lg-info-container,
+  .rap-resource-content-container {
+    flex: 1;
+    margin-bottom: 20px; /* Added spacing for the bottom */
+  }
+  
+  /* Style for section titles */
+  .section-title {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.25rem; /* Example size, adjust as needed */
+  }
+  
+  /* Optional: Add some margin between the two columns for better separation */
+  .lg-info-container {
+    margin-right: 20px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .main-content-area {
+      flex-direction: column;
+    }
+  
+    .lg-info-container {
+      margin-right: 0;
+      margin-bottom: 20px; /* Adjust for consistent spacing */
+    }
+  }
+  

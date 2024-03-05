@@ -77,6 +77,8 @@ const HomePage = ({ token, userName, primaryAccount }) => {
         <br/><br/> 
         For Administrators: To disconnect users from Remote Desktop Terminal Services clusters you manage, use Log Users Off.
         <br/><br/> 
+        For Administrators. To debug and verify Remote Desktop Terminal Services configurations, use Remote Desktop Debugger.
+        <br/><br/> 
         <strong>Service Portal Knowledge Base articles:</strong>
       <ul>
         <li><a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0006557" style={{ color: 'blue' }}>Connect to the Windows Terminal Servers cluster (cernts)</a></li>
@@ -185,8 +187,31 @@ const HomePage = ({ token, userName, primaryAccount }) => {
                   </div>
                 </div>
               </div>
+
+              <div className="col-md-4 mb-4 offset-md-4">
+        <div className="card h-100 shadow-sm hover-effect">
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title">Remote Desktop Debugger</h5>
+            <p className="card-text">For Administrators. Debug and verify Remote Desktop Terminal Services configurations.</p>
+            <Link to="/debugger" className="mt-auto btn btn-primary">Remote Desktop Debugger</Link>
+          </div>
+        </div>
+      </div>
             </>
           )}
+          {/* {isAdmin && (
+  <div className="row justify-content-center">
+    <div className="col-md-4 mb-4">
+      <div className="card h-100 shadow-sm hover-effect">
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title">Remote Desktop Debugger</h5>
+          <p className="card-text">For Administrators. Disconnect users from Remote Desktop Terminal Services clusters you manage.</p>
+          <Link to="/debugger" className="mt-auto btn btn-primary">Remote Desktop Debugger</Link>
+        </div>
+      </div>
+    </div>
+  </div>
+)} */}
         </div>
       </div>
       <Footer />

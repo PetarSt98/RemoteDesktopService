@@ -17,6 +17,7 @@ import Footer from './Components/Footer';
 import HomePage from './HomePage';
 import LogMeOff from './Components/LogMeOff';
 import LogUserOff from './Components/LogUserOff';
+import Debugger from './Components/Debugger';
 
 const App = ({ authenticated, userToken, kcInstance }) => {
   const [accountType, setAccountType] = useState(null);
@@ -53,6 +54,13 @@ const App = ({ authenticated, userToken, kcInstance }) => {
         } />
         <Route path="/log-user-off" element={
           <LogUserOff 
+          token={kcInstance.token} 
+          userName={userToken.preferred_username} 
+          primaryAccount={accountType}
+          />
+        } />
+        <Route path="/debugger" element={
+          <Debugger 
           token={kcInstance.token} 
           userName={userToken.preferred_username} 
           primaryAccount={accountType}

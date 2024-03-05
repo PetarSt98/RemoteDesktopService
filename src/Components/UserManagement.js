@@ -45,6 +45,28 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   }, [exchangeToken, userName]); 
 
   useEffect(() => {
+    if (exchangeToken.length > 0) {
+      fetch('https://rdgateway-backend-test.app.cern.ch/api/debugger/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
+        body: JSON.stringify({ Username: userName }),
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching initial lock statuses:', error)
+      });
+    }
+  }, [exchangeToken, userName]);
+
+  useEffect(() => {
     // Automatically hide the toast after 5 seconds (5000 milliseconds)
     const timer = setTimeout(() => {
       setShowToast(false);
@@ -163,10 +185,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
           <UserDevices token={token} userName={userName} onEditDevice={handleDeviceEdit} />
         </div>
         <div className="col-md-6">
-        <UserSearch token={token} userName={userName} primaryAccount={primaryAccount} deviceNameForEdit={selectedDevice} onEditComplete={() => {setSelectedDevice(""); setHideSearch(hideSearch);}} hideSearch={hideSearch} />
-
-
-
+        <UserSearch token={token} userName={userName} primaryAccount={primaryAccount} deviceNameForEdit={selectedDevice} onEditComplete={() => {setSelectedDevice(""); setHideSearch(hideSearch);}} hideSearch={hideSearch}  />
         </div>
       </div>
     </div>
