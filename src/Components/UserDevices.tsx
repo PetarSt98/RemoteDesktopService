@@ -87,7 +87,7 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
           }}
         >
           <Toast.Header closeButton={true} style={{ fontSize: '12px', padding: '3px',position: 'relative', right: '10px'}}>
-            <strong className="mr-auto">Please check the Troubleshooting section in the <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual</a> to learn how to finish the synchronization.</strong>
+            <strong className="mr-auto">Please check the Troubleshooting section in the <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual</a> to learn how to finish the configuration for this device.</strong>
             
           </Toast.Header>
         </Toast>
