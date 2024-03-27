@@ -113,4 +113,3 @@ const CreateUser: React.FC<CreateUserProps> = ({ token, userName, editUser}) => 
 }
 
 export default CreateUser;
-
