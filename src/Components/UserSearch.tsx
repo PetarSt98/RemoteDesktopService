@@ -142,6 +142,51 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
   }
   signedInUser = userName;
 
+  const handleReset = (userNameResync: string) => {
+    Swal.fire({
+      title: 'Restart Synchronization',
+      text: 'Do you want to restart the synchronization for this device?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const uppercasedDeviceName = searchedDeviceName.toUpperCase();
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/restart?userName=${userNameResync}&deviceName=${uppercasedDeviceName}`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + exchangeToken
+          }
+        })
+        .then(response => response.text())
+        .then(data => {
+          if (data === "Successful sync restart!") {
+            Swal.fire({
+              text: "Synchronization restart initiated. Synchronization will take around 25 minutes.",
+              icon: 'success'
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({
+              text: data,
+              icon: 'error'
+            });
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Swal.fire({
+            text: "Failed to restart the synchronization.",
+            icon: 'error'
+          });
+        });
+      }
+    });
+  };
+
   const handleDelete = (UserNameToDelete: string) => {
     Swal.fire({
       title: 'Disable Remote Desktop access from outside CERN',
@@ -154,7 +199,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -234,7 +279,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
 return (
   <div className="card p-3 h-100">
     {!searchSuccessful && hideSearch ? (
-    <h4 className="card-title">You can use the search feature if needed for managing other users access to devices.</h4>
+    <h4 className="card-title">You can use the edit feature if needed for managing other users access to devices.</h4>
     ) : (
       <h4 className="card-title">Manage user access for a configured device</h4>
     )}
@@ -376,6 +421,7 @@ return (
   signedInUser={signedInUser}
   exchangeToken={exchangeToken}
   searchSuccessful={searchSuccessful}
+  handleReset={handleReset}
 />}
   </div>
 );

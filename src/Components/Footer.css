@@ -19,3 +19,21 @@
     text-decoration: underline;
   }
   
+  .footer p {
+    text-align: center;
+    /* Adjust as needed for your design */
+  }
+  
+  .footer .contact-link {
+    margin: 0 10px; /* This adds horizontal space around the links */
+  }
+  
+  /* New CSS for spacing around pipes */
+  .footer .separator {
+    margin: 0 8px; /* Adjust the space around pipes */
+    display: inline-block; /* Helps in applying margin correctly */
+  }
+
+  .footer .copyright-text {
+    color: #adaeaf; /* Light gray color, adjust as needed */
+  }

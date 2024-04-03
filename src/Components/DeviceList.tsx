@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faLock, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faSync } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 type DeviceListProps = {
@@ -12,9 +12,10 @@ type DeviceListProps = {
   signedInUser: string;
   exchangeToken: string;
   searchSuccessful: boolean;
+  handleReset: (userNameResync: string) => void;
 };
 
-const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searchedDeviceName, signedInUser, exchangeToken, searchSuccessful }) => {
+const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searchedDeviceName, signedInUser, exchangeToken, searchSuccessful, handleReset }) => {
   const [deviceLockStatus, setDeviceLockStatus] = useState<{ [deviceName: string]: boolean }>({});
   const [loading, setLoading] = useState<{ [deviceName: string]: boolean }>({});
 
@@ -25,7 +26,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
       return; // Exit the useEffect if conditions are not met
     }
 
-    fetch('https://rdgateway-backend.app.cern.ch/api/search_tabel/acces_init', {
+    fetch('https://rdgateway-backend-test.app.cern.ch/api/search_tabel/acces_init', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
       body: JSON.stringify({ device: searchedDeviceName, Users: devices }),
@@ -41,7 +42,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
   const handleAccess = (device: string) => {
     setLoading(prev => ({ ...prev, [device]: true }));
     const currentStatus = deviceLockStatus[device];
-    fetch('https://rdgateway-backend.app.cern.ch/api/search_tabel/access', {
+    fetch('https://rdgateway-backend-test.app.cern.ch/api/search_tabel/access', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
       body: JSON.stringify({ signedInUser: signedInUser, searchedDeviceName: searchedDeviceName, user: device, lockStatus: !currentStatus }),
@@ -109,6 +110,9 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, handleDelete, searched
                   <FontAwesomeIcon icon={!deviceLockStatus[device] ? faLock : faUnlockAlt} />
                 )}
               </Button>
+              <Button variant="outline-primary" size="sm" className="ml-3 button-hover-effect" onClick={() => handleReset(device)} title="Restart the synchronization for this device" style={{ marginLeft: '4px', borderColor: 'orange', color: 'orange' }}>
+          <FontAwesomeIcon icon={faSync} className="fa-icon" /> 
+        </Button>
               <Button
                 variant="outline-danger"
                 onClick={() => handleDelete(device)}

@@ -3,11 +3,11 @@ import CreateUser from './CreateUser';
 import { useTokenExchangeHandler } from "../shared/useTokenExchangeHandler";
 import Swal from 'sweetalert2';
 import { DownloadRdp } from './DownloadRdp/DownloadRdp';
-import { Button, Modal, Collapse  } from 'react-bootstrap';
+import { Button, Modal, Collapse, Toast } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faCog , faCheck, faTimes, faEdit, faQuestion, faSync  } from '@fortawesome/free-solid-svg-icons';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FiSearch, FiX } from 'react-icons/fi';
+
 
 interface UserDevicesProps {
   token: string;
@@ -28,6 +28,7 @@ interface DeviceItemProps {
 }
 
 const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncompleted, dateAdd, dateUpdate, handleDelete, handleConfirmation, handleEdit, handleResetSync }) => {
+  const [showAlert, setShowAlert] = useState<boolean>(statusUncompleted);
   const confirmDelete = () => {
     Swal.fire({
       title: 'Disable Remote Desktop access from outside CERN',
@@ -73,32 +74,45 @@ const DeviceItem: React.FC<DeviceItemProps> = ({ device, status, statusUncomplet
 
   return (
     <li className="d-flex justify-content-between align-items-center">
-    <span className="d-flex align-items-center">
-        <span 
-          className={
-            statusUncompleted 
-            ? 'btn btn-sm btn-warning' 
-            : `btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`
-          } 
-          title={
-            statusUncompleted 
-            ? 'The device configuration is pending' 
-            : (status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access')
-          }
-          style={{ cursor: 'default', marginRight: '10px' }}
+            { statusUncompleted && (
+        <Toast
+          onClose={() => setShowAlert(false)}
+          show={showAlert}
+          style={{
+            position: 'absolute',
+            left: 0,
+            transform: 'translateX(-102%)',
+            zIndex: 1050,
+          }}
         >
-          {statusUncompleted 
-            ? <FontAwesomeIcon icon={faQuestion} /> 
-            : (status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />)
-          }
+          <Toast.Header closeButton={true} style={{ fontSize: '12px', padding: '3px',position: 'relative', right: '10px'}}>
+            <strong className="mr-auto">Please check the Troubleshooting section in the <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual</a> to learn how to finish the configuration for this device.</strong>
+            
+          </Toast.Header>
+        </Toast>
+      )}
+      <span className="d-flex align-items-center">
+        {statusUncompleted ? (
+            <span className='btn btn-sm btn-warning' title='The device configuration is pending' style={{ cursor: 'default', marginRight: '10px' }}>
+              <FontAwesomeIcon icon={faQuestion} />
+            </span>
+        ) : (
+          <span 
+            className={`btn btn-sm ${status ? 'btn-success' : 'btn-danger'}`} 
+            title={status ? 'The device is configured for remote access' : 'This device is not yet configured for remote access'}
+            style={{ cursor: 'default', marginRight: '10px' }}
+          >
+            {status ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
+          </span>
+        )}
+        <span title={`Added on: ${dateAdd}\nLast update: ${dateUpdate}`}>
+          {device}
         </span>
-          <span title={`Added on: ${dateAdd}\nLast update: ${dateUpdate}`}>
-            {device}
-        </span>
-    </span>
+      </span>
       <hr className="flex-grow-1 mx-3" />
       <div className="d-flex align-items-center">
       {statusUncompleted && (
+
           <Button variant="outline-secondary" size="sm" className="ml-3" onClick={callConfirmRequest} title="Confirm request for this device">
             Mark as Synchronized
           </Button>
@@ -164,6 +178,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
         });
     }
   }, [userName, exchangeToken]);
+
   // console.log(onEditDevice);
 
   const editUser = (device: string) => {
@@ -205,7 +220,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const checkDeviceDates = (deviceNames: string[]) => {
-    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/date_check`, {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/date_check`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', 
@@ -231,7 +246,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const checkDeviceUncompletedStatuses = (deviceNames: string[]) => {
-    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/uncompletedCheck`, {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/uncompletedCheck`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json', 
@@ -241,7 +256,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
     })
     .then(response => response.json())
     .then(statuses => {
-      // console.log('Received statuses:', statuses); // Added console.log here
+      console.log('Received statuses:', statuses); // Added console.log here
       const newDeviceUncompleteStatus: { [key: string]: boolean } = {};
       for (let i = 0; i < deviceNames.length; i++) {
         newDeviceUncompleteStatus[deviceNames[i]] = statuses[i];
@@ -264,7 +279,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/confirm?userName=${userName}&deviceName=${device}`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken // Note: You may need to get exchangeToken from the parent component
@@ -308,7 +323,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/restart?userName=${userName}&deviceName=${device}`, {
+        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/restart?userName=${userName}&deviceName=${device}`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -342,7 +357,7 @@ const UserDevices: React.FC<UserDevicesProps> = ({ token, userName, onEditDevice
   };
 
   const deleteDevice = (device: string) => {
-    fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}&signedInUser=${userName}&primaryUser=${userName}&addDeviceOrUser=device`, {
+    fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${userName}&deviceName=${device}&signedInUser=${userName}&primaryUser=${userName}&addDeviceOrUser=device`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + exchangeToken
