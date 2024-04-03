@@ -29,7 +29,7 @@ const Debugger = ({ token, userName, primaryAccount }) => {
       if (token && userName && exchangeToken.length > 0) { // Ensure both token and userName are defined
         setIsLoading(true); // Begin loading
         try {
-          const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+          const response = await fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
             method: "GET",
             headers: {
               Authorization: "Bearer " + exchangeToken
@@ -52,7 +52,7 @@ const Debugger = ({ token, userName, primaryAccount }) => {
   
   useEffect(() => {
     if (shouldFetch && exchangeToken.length != 0) {
-      fetch('https://rdgateway-backend-test.app.cern.ch/api/debugger/logs', {
+      fetch('https://rdgateway-backend.app.cern.ch/api/debugger/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
         body: JSON.stringify({ Username: inputUserName }),

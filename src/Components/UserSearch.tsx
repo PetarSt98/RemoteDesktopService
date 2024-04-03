@@ -154,7 +154,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/restart?userName=${userNameResync}&deviceName=${uppercasedDeviceName}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/restart?userName=${userNameResync}&deviceName=${uppercasedDeviceName}`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -199,7 +199,7 @@ const UserSearch = forwardRef<UserSearchRef, UserSearchProps>((props, ref) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const uppercasedDeviceName = searchedDeviceName.toUpperCase();
-        fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
+        fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/remove?userName=${UserNameToDelete}&deviceName=${uppercasedDeviceName}&signedInUser=${signedInUser}&primaryUser=${primaryUser}&addDeviceOrUser=user&fetchToDeleteResource=${false}`, {
           method: "DELETE",
           headers: {
             Authorization: "Bearer " + exchangeToken

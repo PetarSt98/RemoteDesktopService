@@ -26,7 +26,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
   useEffect(() => {
     if (exchangeToken.length > 0) {
       setIsLoading(true);
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+      fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -47,7 +47,7 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
 
   useEffect(() => {
     if (exchangeToken.length > 0) {
-      fetch('https://rdgateway-backend-test.app.cern.ch/api/debugger/logs', {
+      fetch('https://rdgateway-backend.app.cern.ch/api/debugger/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: "Bearer " + exchangeToken },
         body: JSON.stringify({ Username: userName }),

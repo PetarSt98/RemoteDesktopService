@@ -32,7 +32,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   useEffect(() => {
     if (exchangeToken.length > 0) {
       setIsLoading(true);
-      fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+      fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -73,7 +73,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
         };
 
         try {
-          const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/trigger?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
+          const response = await fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/trigger?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
             method: "GET",
             headers: {
               Authorization: "Bearer " + exchangeToken
@@ -110,7 +110,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   }, [userName, exchangeToken, fetchOnlyPublicCluster, waitTime, logOffTrigger]);
   
   const fetchResult = () => {
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/result?username=${userName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + exchangeToken
@@ -174,7 +174,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
 
   const handleLogOff = (userName, machineName) => {
     setLoggingOffDevice(machineName);
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/log-off?username=${userName}&servername=${machineName}`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/log-off?username=${userName}&servername=${machineName}`, {
       method: "DELETE", // Use DELETE method for log-off operation
       headers: {
         Authorization: `Bearer ${exchangeToken}`, // Use the exchange token for authorization

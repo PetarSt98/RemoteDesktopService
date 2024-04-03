@@ -38,7 +38,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
       if (token && userName && exchangeToken.length > 0) { // Ensure both token and userName are defined
         setIsLoading(true); // Begin loading
         try {
-          const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
+          const response = await fetch(`https://rdgateway-backend.app.cern.ch/api/devices_tabel/admins?userName=${userName}`, {
             method: "GET",
             headers: {
               Authorization: "Bearer " + exchangeToken
@@ -81,7 +81,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
       
 
       try {
-        const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/trigger?username=${inputUserName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
+        const response = await fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/trigger?username=${inputUserName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + exchangeToken
@@ -131,7 +131,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
   const fetchResult = async () => {
     try {
       console.log(`Fetching results for ${inputUserName}`); // Debugging line
-      const response = await fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/result?username=${inputUserName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
+      const response = await fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/result?username=${inputUserName}&fetchOnlyPublicCluster=${fetchOnlyPublicCluster}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + exchangeToken
@@ -197,7 +197,7 @@ const LogUserOff = ({ token, userName, primaryAccount }) => {
 
   const handleLogOff = (userName, machineName) => {
     setLoggingOffDevice(machineName);
-    fetch(`https://rdgateway-backend-test.app.cern.ch/api/log_session/log-off?username=${userName}&servername=${machineName}`, {
+    fetch(`https://rdgateway-backend.app.cern.ch/api/log_session/log-off?username=${userName}&servername=${machineName}`, {
       method: "DELETE", // Use DELETE method for log-off operation
       headers: {
         Authorization: `Bearer ${exchangeToken}`, // Use the exchange token for authorization
