@@ -85,6 +85,8 @@ const UserManagement = ({ token, userName, primaryAccount }) => {
         To find the instructions for how to use the website, please use the 
         <a href="https://cern.service-now.com/service-portal?id=kb_article&n=KB0009026" style={{color: 'blue', marginLeft: '4px'}}>manual.</a>
         <br/><br/> 
+        To configure the device, it needs to be in Active Directory!
+        <br/><br/> 
         To be able to modify the list of users allowed to connect to a device, the account CERN\{userName} must be a CERN primary account and it has to fulfill at least one of the following requirements:
         <br/><br/>
         Is registered as 'Responsible' or 'Main User' of the device. To check or modify this information, visit the network database available at 
