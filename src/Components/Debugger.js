@@ -139,21 +139,34 @@ const Debugger = ({ token, userName, primaryAccount }) => {
   const renderLGinfo = () => {
     if (!data || !data.LGinfo) return null;
     console.log(data.LGinfo);
+  
+    const rapInfo = data.RAPInfo || {};
+  
     return (
-      Object.keys(data.LGinfo).map((key, index) => (
-        <Card key={index} className="mb-3">
-          <Card.Header>{key}</Card.Header>
-          <Card.Body>
-            {data.LGinfo[key].length > 0 ? (
-              <ul>
-                {data.LGinfo[key].map((user, userIndex) => (
-                  <li key={userIndex}>{user}</li>
-                ))}
-              </ul>
-            ) : <p>No users.</p>}
-          </Card.Body>
-        </Card>
-      ))
+      Object.keys(data.LGinfo).map((key, index) => {
+        const cleanKey = key.trim().replace(/"/g, "");  // Remove extra spaces and quotation marks
+        const rapContent = rapInfo[cleanKey];
+  
+        return (
+          <Card key={index} className="mb-3">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <span>{key}</span>
+              <span style={{ color: rapContent === "No RAP" ? 'red' : 'inherit' }}>
+                Policy: {rapContent || "No RAP Info Available"}
+              </span>
+            </Card.Header>
+            <Card.Body>
+              {data.LGinfo[key].length > 0 ? (
+                <ul>
+                  {data.LGinfo[key].map((user, userIndex) => (
+                    <li key={userIndex}>{user}</li>
+                  ))}
+                </ul>
+              ) : <p>No users.</p>}
+            </Card.Body>
+          </Card>
+        );
+      })
     );
   };
 
