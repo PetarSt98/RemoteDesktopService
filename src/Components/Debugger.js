@@ -151,7 +151,7 @@ const Debugger = ({ token, userName, primaryAccount }) => {
           <Card key={index} className="mb-3">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <span>{key}</span>
-              <span style={{ color: rapContent === "No RAP" ? 'red' : 'inherit' }}>
+              <span style={{ color: (rapContent === "No RAP" || rapContent === "Corrupted RAP") ? 'red' : 'inherit' }}>
                 Policy: {rapContent || "No RAP Info Available"}
               </span>
             </Card.Header>
