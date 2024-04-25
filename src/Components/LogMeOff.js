@@ -19,7 +19,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
   const [loading, setLoading] = useState(false);
   const [percentage, setPercentage] = useState(0);
   const [fetchOnlyPublicCluster, setFetchOnlyPublicCluster] = useState("true");
-  const [waitTime, setWaitTime] = useState(30000); // Default to 30 seconds
+  const [waitTime, setWaitTime] = useState(50000); // Default to 30 seconds
   const [logOffTrigger, setLogOffTrigger] = useState(0);
   const [clusterSearchText, setClusterSearchText] = useState(''); // State for cluster search text
   const [machineSearchText, setMachineSearchText] = useState('');
@@ -169,7 +169,7 @@ const LogMeOff = ({ token, userName, primaryAccount }) => {
 
   const handleToggle = (event) => {
     setFetchOnlyPublicCluster(event.target.checked ? "false" : "true");
-    setWaitTime(event.target.checked ? 250000 : 30000);
+    setWaitTime(event.target.checked ? 400000 : 50000);
   };
 
   const handleLogOff = (userName, machineName) => {
